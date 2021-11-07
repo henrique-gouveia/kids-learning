@@ -12,6 +12,9 @@ const Aluno = () => import('@/views/admin/Aluno.vue');
 const Questao = () => import('@/views/admin/Questao.vue');
 
 const Questionario = () => import('@/views/admin/Questionario.vue');
+const QuestionarioSearch = () => import('@/views/admin/QuestionarioSearch.vue');
+const QuestionarioReport = () => import('@/views/admin/QuestionarioReport.vue');
+
 const Quiz = () => import('@/views/public/Quiz.vue');
 
 const Usuario = () => import('@/views/admin/Usuario.vue');
@@ -46,6 +49,14 @@ const router = new VueRouter({
 				{
 					path: '/questionario',
 					component: Questionario
+				},
+				{
+					path: '/questionario/localizar',
+					component: QuestionarioSearch,
+				},
+				{
+					path: '/questionario/:id/relatorio',
+					component: QuestionarioReport,
 				},
 				{
 					path: '/usuarios',
