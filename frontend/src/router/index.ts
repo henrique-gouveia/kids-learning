@@ -7,6 +7,10 @@ import Layout from '@/views/template/Layout.vue';
 // Views
 const Home = () => import('@/views/Home.vue');
 
+const Turma = () => import('@/views/admin/Turma.vue');
+const Aluno = () => import('@/views/admin/Aluno.vue');
+const Questao = () => import('@/views/admin/Questao.vue');
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -21,6 +25,18 @@ const router = new VueRouter({
 				{
 					path: '/',
 					component: Home
+				},
+				{
+					path: '/turmas',
+					component: Turma
+				},
+				{
+					path: '/alunos',
+					component: Aluno
+				},
+				{
+					path: '/questoes',
+					component: Questao,
 				},
 			]
 		},

@@ -19,6 +19,24 @@ const Menu: ISidebarMenu = [
         path: 'inicio',
         icon : 'icon-home',
     },
+    {
+        name: 'Administração',
+        icon: 'icon-layers',
+        submenu: [
+            {
+                name: 'Turmas',
+                path: 'turmas'
+            },
+            {
+                name: 'Alunos',
+                path: 'alunos'
+            },
+            {
+                name: 'Questões',
+                path: 'questoes'
+            },
+        ]
+    },
 ];
 
 export default Menu;
