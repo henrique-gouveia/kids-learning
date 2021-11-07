@@ -1,86 +1,78 @@
 <template>
-  <div class="quiz-wrapper">
+  <b-container>
+    <b-row class="quiz-wrapper">
+      <b-col cols="12" class="accordion" role="tablist">
+        <b-card class="mb-1">
+          <b-card-header header-tag="header" class="p-1" role="tab">
+            <b-button 
+              block 
+              v-b-toggle.ask-accordion 
+              variant="purple"
+              class="text-left"
+            >
+              {{ currentQuestao.titulo }}
+            </b-button>
+          </b-card-header>
+          <b-collapse id="ask-accordion" visible accordion="ask-accordion" role="tabpanel">
 
-    <NavBar />
+            <img 
+              class="img-fluid mt-2" 
+              v-if="currentQuestao.imageUrl" 
+              :src="currentQuestao.imageUrl" 
+              alt="Imagem" 
+              width="120"
+            />
 
-    <section class="section-container container-fluid mt-2">
-      <b-row>
-        <b-col cols="12" class="accordion" role="tablist">
-          <b-card class="mb-1">
-            <b-card-header header-tag="header" class="p-1" role="tab">
-              <b-button 
-                block 
-                v-b-toggle.ask-accordion 
-                variant="purple"
-                class="text-left"
+            <audio 
+              class="mt-2" 
+              controls 
+              v-if="currentQuestao.audioUrl"
+            >
+              <source src="@/assets/audios/fruits.mp3" type="audio/mpeg">
+              Seu browser não suporta o player de audio.
+            </audio>
+
+            <b-card-body>
+              <b-card
+                no-body
+                v-for="resposta in currentQuestao.respostas"
+                :key="resposta.id"
               >
-                {{ currentQuestao.titulo }}
-              </b-button>
-            </b-card-header>
-            <b-collapse id="ask-accordion" visible accordion="ask-accordion" role="tabpanel">
-
-              <img 
-                class="img-fluid mt-2" 
-                v-if="currentQuestao.imageUrl" 
-                :src="currentQuestao.imageUrl" 
-                alt="Imagem" 
-                width="120"
-              />
-
-              <audio 
-                class="mt-2" 
-                controls 
-                v-if="currentQuestao.audioUrl"
-              >
-                <source src="@/assets/audios/fruits.mp3" type="audio/mpeg">
-                Seu browser não suporta o player de audio.
-              </audio>
-
-              <b-card-body>
-                <b-card
-                  no-body
-                  v-for="resposta in currentQuestao.respostas"
-                  :key="resposta.id"
+                <b-row 
+                  no-gutters
+                  style="cursor: pointer"
+                  @click="() => selectAnswer(resposta)"
+                  :class="getAnswerBackgroundColor(resposta)"
                 >
-                  <b-row 
-                    no-gutters
-                    style="cursor: pointer"
-                    @click="() => selectAnswer(resposta)"
-                    :class="getAnswerBackgroundColor(resposta)"
+                  <b-col 
+                    md="1" 
+                    class="d-flex justify-content-center align-items-center"
+                    :class="!resposta.selecionada ? 'bg-gray' : ''"
                   >
-                    <b-col 
-                      md="1" 
-                      class="d-flex justify-content-center align-items-center"
-                      :class="!resposta.selecionada ? 'bg-gray' : ''"
-                    >
-                      <b-card-text>
-                        <span v-if="!hasAnswerSelected()">{{ resposta.alternativa }}</span>
-                        <em v-else-if="resposta.selecionada" :class="`fa-2x icon-${resposta.correta ? 'check' : 'close'}`"></em>
-                        <span v-else>{{ resposta.alternativa }}</span>
-                      </b-card-text>
-                    </b-col>
-                    <b-col md="11">
-                      <b-card-body>
-                        <b-card-text>{{ resposta.texto }}</b-card-text>
-                      </b-card-body>
-                    </b-col>
-                  </b-row>
-                </b-card>
-              </b-card-body>
-            </b-collapse>
-            <div class="m-1">
-              <b-button @click="previous" class="mr-1" v-if="!isFirstPage">Anterior</b-button>
-              <b-button variant="purple" @click="next" v-if="!isLastPage">Próxima</b-button>
-              <b-button variant="success" v-if="isLastPage">Confirmar</b-button>
-            </div>
-          </b-card>
-        </b-col>
-      </b-row>
-    </section>
-    <div class="footer-wrapper">
-      <Footer />
-    </div>
-  </div>
+                    <b-card-text>
+                      <span v-if="!hasAnswerSelected()">{{ resposta.alternativa }}</span>
+                      <em v-else-if="resposta.selecionada" :class="`fa-2x icon-${resposta.correta ? 'check' : 'close'}`"></em>
+                      <span v-else>{{ resposta.alternativa }}</span>
+                    </b-card-text>
+                  </b-col>
+                  <b-col md="11">
+                    <b-card-body>
+                      <b-card-text>{{ resposta.texto }}</b-card-text>
+                    </b-card-body>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </b-card-body>
+          </b-collapse>
+          <div class="m-1">
+            <b-button @click="previous" class="mr-1" v-if="!isFirstPage">Anterior</b-button>
+            <b-button variant="purple" @click="next" v-if="!isLastPage">Próxima</b-button>
+            <b-button variant="success" v-if="isLastPage">Confirmar</b-button>
+          </div>
+        </b-card>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script lang="ts">
@@ -148,23 +140,6 @@ export default class Quiz extends Vue {
 
 <style lang="scss">
 .quiz-wrapper {
-  height: 100vh;
-  overflow-x: hidden;
-  display: grid;
-  grid-template-rows: 60px 1fr 40px;
-  grid-template-areas: "header" "content" "footer";
-
-  & .topnavbar-wrapper {
-    grid-area: header;
-  }
-
-  & .section-container {
-    grid-area: content;
-  }
-
-  & .footer-wrapper {
-    grid-area: footer;
-    margin: 10px;
-  }
+  padding-top: 10px;
 }
 </style>

@@ -12,9 +12,9 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Header from './Header.vue';
+import Header from '../../template/Header.vue';
 import Sidebar from './Sidebar.vue'
-import Footer from './Footer.vue';
+import Footer from '../../template/Footer.vue';
 
 @Component({
   components: {

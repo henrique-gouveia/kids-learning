@@ -2,10 +2,11 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 // Layouts
-import Layout from '@/views/template/Layout.vue';
+import AdminLayout from '@/views/admin/template/Layout.vue';
+import PublicLayout from '@/views/public/template/Layout.vue';
 
 // Views
-const Home = () => import('@/views/Home.vue');
+const Home = () => import('@/views/admin/Home.vue');
 
 const Turma = () => import('@/views/admin/Turma.vue');
 const Aluno = () => import('@/views/admin/Aluno.vue');
@@ -25,7 +26,7 @@ const router = new VueRouter({
 		// Admin pages
 		{
 			path: '/',
-			component: Layout,
+			component: AdminLayout,
 			children: [
 				{
 					path: '/',
@@ -55,8 +56,14 @@ const router = new VueRouter({
 		},
 		// public
 		{
-			path: '/questionario/:id/quiz',
-			component: Quiz
+			path: '/',
+			component: PublicLayout,
+			children: [
+				{
+					path: '/questionario/:id/quiz',
+					component: Quiz,
+				}
+			]
 		},
 		// Not found route
 		{
