@@ -34,7 +34,7 @@
 					icon="fas fa-clipboard-list"
 					variant="warning"
 					description="Questionários"
-					value="0"
+					value="3"
 					link="/questionarios"
 				/>
 			</b-col>

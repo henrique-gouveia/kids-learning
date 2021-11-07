@@ -7,8 +7,8 @@
 		<b-form>
 			<input id="aluno-id" type="hidden" v-model="aluno.id" />
 			<b-row>
-				<b-col sm="3" xs="12">
-					<b-form-group label="Turma:" label-for="aluno-turma" v-if="mode === 'save'">
+				<b-col sm="3" xs="12" v-if="mode === 'save'">
+					<b-form-group label="Turma:" label-for="aluno-turma">
 						<b-form-select 
 							id="aluno-turma"
 							v-model="aluno.turmaId"
@@ -23,7 +23,7 @@
 							type="text"
 							placeholder="Informe a matrícula do Aluno..."
 							required
-							v-model="aluno.nome"
+							v-model="aluno.matricula"
 							:readonly="mode == 'remove'"
 						/>
 					</b-form-group>
@@ -79,6 +79,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AdminLayout from './AdminLayout.vue';
+import { alunos } from '@/data';
 
 @Component({
   components: {
@@ -89,26 +90,7 @@ export default class Student extends Vue {
 	mode = 'save';
 
 	aluno = {}
-	alunos = [
-		{
-			id: 1,
-			matricula: 123,
-			turma: 'Turma 1',
-			nome: 'Aluno 1',
-		},
-		{
-			id: 2,
-			matricula: 456,
-			turma: 'Turma 2',
-			nome: 'Aluno 2',
-		},
-		{
-			id: 3,
-			matricula: 789,
-			turma: 'Turma 3',
-			nome: 'Aluno 3',
-		}
-	];
+	alunos = alunos;
 	turmas = [ 'Turma 1', 'Turma 2', 'Turma 3' ];
   
   public fields: unknown[] = [

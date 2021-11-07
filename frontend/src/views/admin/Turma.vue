@@ -37,10 +37,10 @@
 		</b-form>
 		<b-table hover striped :fields="fields" :items="turmas">
 			<template #cell(actions)="data">
-				<b-button variant="warning" @click="loadClass(data.item)" class="mr-2">
+				<b-button variant="warning" @click="loadTurma(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
 				</b-button>
-				<b-button variant="danger" @click="loadClass(data.item, 'remove')">
+				<b-button variant="danger" @click="loadTurma(data.item, 'remove')">
 					<i class="fas fa-trash-alt"></i>
 				</b-button>
 			</template>
@@ -58,6 +58,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AdminLayout from './AdminLayout.vue';
+import { turmas } from '@/data';
 
 @Component({
   components: {
@@ -68,20 +69,7 @@ export default class Class extends Vue {
 	mode = 'save';
 
 	turma = {}
-	turmas = [
-		{
-			id: 1,
-			nome: 'Turma 1',
-		},
-		{
-			id: 2,
-			nome: 'Turma 2',
-		},
-		{
-			id: 3,
-			nome: 'Turma 3',
-		}
-	];
+	turmas = turmas;
   
   public fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
@@ -99,7 +87,7 @@ export default class Class extends Vue {
 
   private async loadTurmas(): Promise<void> {}
 
-  public loadClass(turma, mode = 'save'): void {
+  public loadTurma(turma, mode = 'save'): void {
     this.mode = mode;
     this.turma = turma;
   }

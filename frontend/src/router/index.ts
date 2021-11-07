@@ -12,6 +12,7 @@ const Aluno = () => import('@/views/admin/Aluno.vue');
 const Questao = () => import('@/views/admin/Questao.vue');
 
 const Questionario = () => import('@/views/admin/Questionario.vue');
+const Quiz = () => import('@/views/public/Quiz.vue');
 
 const Usuario = () => import('@/views/admin/Usuario.vue');
 
@@ -51,6 +52,11 @@ const router = new VueRouter({
 					component: Usuario,
 				},
 			]
+		},
+		// public
+		{
+			path: '/questionario/:id/quiz',
+			component: Quiz
 		},
 		// Not found route
 		{

@@ -7,7 +7,7 @@
 		<b-form>
 			<input id="questionario-id" type="hidden" v-model="questionario.id" />
 			<b-row>
-				<b-col md="4" sm="12">
+				<b-col md="4" sm="12" v-if="mode === 'save'">
 					<b-form-group label="Turma:" label-for="questionario-turma">
 						<b-form-select 
 							id="questionario-turma"
@@ -22,6 +22,7 @@
 							id="questionario-inicio"
 							required
 							v-model="questionario.dataInicio"
+							:readonly="mode === 'remove'"
 						/>
 					</b-form-group>
 				</b-col>
@@ -31,28 +32,10 @@
 							id="questionario-fim"
 							required
 							v-model="questionario.dataFim"
+							:readonly="mode === 'remove'"
 						/>
 					</b-form-group>
 				</b-col>
-			</b-row>
-			<b-row>
-				<b-col xs="12">
-					<b-form-group label="Url:" label-for="questionario-url">
-						<b-input-group>
-							<b-form-input 
-								placeholder="Link para o questionário..."
-								readonly
-							/>
-							<b-input-group-append>
-								<b-button variant="green" class=" ml-1 mr-1">
-									<em class="far fa-copy"></em>
-								</b-button>
-							</b-input-group-append>
-						</b-input-group>
-					</b-form-group>
-				</b-col>
-			</b-row>
-			<b-row>
 			</b-row>
 			<b-row>
 				<b-col xs="12">
@@ -71,6 +54,13 @@
 		</b-form>
 		<b-table hover striped :fields="fields" :items="questionarios">
 			<template #cell(actions)="data">
+				<router-link 
+					class="btn btn-info mr-2"
+					:to="`questionario/${data.item.id}/quiz`"
+					target="_blank"
+				>
+					<i class="fas fa-tasks"></i>
+				</router-link>
 				<b-button variant="warning" @click="loadQuestionario(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
 				</b-button>
@@ -92,6 +82,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import AdminLayout from './AdminLayout.vue';
+import { questionarios } from '@/data';
 
 @Component({
   components: {
@@ -102,14 +93,14 @@ export default class Questionario extends Vue {
 	mode = 'save';
 
 	questionario = {};
-	questionarios = [];
+	questionarios = questionarios;
+
 	turmas = [ 'Turma 1', 'Turma 2', 'Turma 3' ];
   
   public fields: unknown[] = [
-		{ key: 'id', label: 'Código', sortable: true },
+    { key: 'turma', label: 'Turma', sortable: true },
     { key: 'inicio', label: 'Início', sortable: true },
     { key: 'fim', label: 'Fim', sortable: true },
-    { key: 'link', label: 'Link', sortable: true },
     { key: 'actions', label: 'Ações' }
 	];
 

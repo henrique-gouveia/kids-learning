@@ -7,8 +7,8 @@
 		<b-form>
 			<input id="questao-id" type="hidden" v-model="questao.id" />
 			<b-row>
-				<b-col sm="4" xs="12">
-					<b-form-group label="Tipo:" label-for="questao-tipo" v-if="mode === 'save'">
+				<b-col sm="4" xs="12" v-if="mode === 'save'">
+					<b-form-group label="Tipo:" label-for="questao-tipo">
 						<b-form-select 
 							id="questao-tipo"
 							v-model="questao.tipoId"
@@ -43,7 +43,7 @@
 					</b-form-group>
 				</b-col>
 			</b-row>
-			<b-row>
+			<b-row v-if="mode === 'save'">
 				<b-col cols="12">
 					<b-form-group label="Respostas:">
 						<b-row>

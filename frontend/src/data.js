@@ -1,3 +1,39 @@
+export const turmas = [
+	{
+		id: 1,
+		nome: 'Turma 1',
+	},
+	{
+		id: 2,
+		nome: 'Turma 2',
+	},
+	{
+		id: 3,
+		nome: 'Turma 3',
+	}
+];
+
+export const alunos = [
+	{
+		id: 1,
+		matricula: 123,
+		turma: 'Turma 1',
+		nome: 'Aluno 1',
+	},
+	{
+		id: 2,
+		matricula: 456,
+		turma: 'Turma 2',
+		nome: 'Aluno 2',
+	},
+	{
+		id: 3,
+		matricula: 789,
+		turma: 'Turma 3',
+		nome: 'Aluno 3',
+	}
+]
+
 export const questoes = [
 	{
 		id: 1,
@@ -6,20 +42,20 @@ export const questoes = [
 		respostas: [
 			{
 				id: 1,
-				alternative: "A",
-				text: "Eleven",
-				selected: false,
+				alternativa: "A",
+				texto: "Eleven",
+				selecionada: false,
 			}, {
 				id: 2,
-				text: "One",
-				alternative: "B",
-				selected: false,
-				isCorrect: true
+				texto: "One",
+				alternativa: "B",
+				selecionada: false,
+				correta: true
 			}, {
 				id: 3,
-				text: "Ten",
-				alternative: "C",
-				selected: false,
+				texto: "Ten",
+				alternativa: "C",
+				selecionada: false,
 			}
 		]
 	}, {
@@ -29,20 +65,20 @@ export const questoes = [
 		respostas: [
 			{
 				id: 4,
-				text: "It's nine o'clock",
-				alternative: "A",
-				selected: false,
-				isCorrect: true
+				texto: "It's nine o'clock",
+				alternativa: "A",
+				selecionada: false,
+				correta: true
 			}, {
 				id: 5,
-				text: "It's ten past nine",
-				alternative: "B",
-				selected: false,
+				texto: "It's ten past nine",
+				alternativa: "B",
+				selecionada: false,
 			}, {
 				id: 6,
-				text: "It's eleven o'clock",
-				alternative: "C",
-				selected: false,
+				texto: "It's eleven o'clock",
+				alternativa: "C",
+				selecionada: false,
 			}
 		]
 	}, {
@@ -52,20 +88,20 @@ export const questoes = [
 		respostas: [
 			{
 				id: 7,
-				text: "Strawberry",
-				alternative: "A",
-				selected: false,
+				texto: "Strawberry",
+				alternativa: "A",
+				selecionada: false,
 			}, {
 				id: 8,
-				text: "Watermelon",
-				alternative: "B",
-				selected: false,
+				texto: "Watermelon",
+				alternativa: "B",
+				selecionada: false,
 			}, {
 				id: 9,
-				text: "Papaya",
-				alternative: "C",
-				selected: false,
-				isCorrect: true
+				texto: "Papaya",
+				alternativa: "C",
+				selecionada: false,
+				correta: true
 			}
 		]
 	}, {
@@ -76,20 +112,20 @@ export const questoes = [
 		respostas: [
 			{
 				id: 10,
-				text: "Bus",
-				alternative: "A",
-				selected: false,
-				isCorrect: true
+				texto: "Bus",
+				alternativa: "A",
+				selecionada: false,
+				correta: true
 			}, {
 				id: 11,
-				text: "Motocycle",
-				alternative: "B",
-				selected: false,
+				texto: "Motocycle",
+				alternativa: "B",
+				selecionada: false,
 			}, {
 				id: 12,
-				text: "Airplane",
-				alternative: "C",
-				selected: false,
+				texto: "Airplane",
+				alternativa: "C",
+				selecionada: false,
 			}
 		]
 	}, {
@@ -100,21 +136,45 @@ export const questoes = [
 		respostas: [
 			{
 				id: 13,
-				text: "Meat, Pears, Grapes",
-				alternative: "A",
-				selected: false,
+				texto: "Meat, Pears, Grapes",
+				alternativa: "A",
+				selecionada: false,
 			}, {
 				id: 14,
-				text: "Apple, Orange, Pineapple, Lemon and Banana",
-				alternative: "B",
-				selected: false,
-				isCorrect: true
+				texto: "Apple, Orange, Pineapple, Lemon and Banana",
+				alternativa: "B",
+				selecionada: false,
+				correta: true
 			}, {
 				id: 15,
-				text: "Apple, Orange, Milk and eggs",
-				alternative: "C",
-				selected: false,
+				texto: "Apple, Orange, Milk and eggs",
+				alternativa: "C",
+				selecionada: false,
 			}
 		]
 	}
+];
+
+export const questionarios = [
+	{
+		id: '35c6cd75-7c4b-47d1-84ba-ad7d7e2c5aed',
+		turma: 'Turma 1',
+		inicio: '01/11/2021',
+		fim: '03/11/2021',
+		link: 'http://localhost:8080/questionarios/35c6cd75-7c4b-47d1-84ba-ad7d7e2c5aed'
+	},
+	{
+		id: 'c11d1e9c-9360-447f-9c66-c085fd0f70bf',
+		turma: 'Turma 2',
+		inicio: '01/11/2021',
+		fim: '03/11/2021',
+		link: 'http://localhost:8080/questionarios/c11d1e9c-9360-447f-9c66-c085fd0f70bf'
+	},
+	{
+		id: '40d975dc-d3f9-4831-b47a-444b3356c4ee',
+		turma: 'Turma 3',
+		inicio: '01/11/2021',
+		fim: '03/11/2021',
+		link: 'http://localhost:8080/questionarios/40d975dc-d3f9-4831-b47a-444b3356c4ee'
+	},
 ];
