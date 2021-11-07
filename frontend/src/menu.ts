@@ -37,6 +37,21 @@ const Menu: ISidebarMenu = [
             },
         ]
     },
+    {
+        name: 'Questionário',
+        icon: 'icon-note',
+        submenu: [
+            {
+                name: 'Gerenciar',
+                path: 'questionario'
+            }
+        ]
+    },
+    {
+        name: 'Usuários',
+        icon: 'icon-people',
+        path: 'usuarios'
+    }
 ];
 
 export default Menu;

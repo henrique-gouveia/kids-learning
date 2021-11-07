@@ -11,6 +11,10 @@ const Turma = () => import('@/views/admin/Turma.vue');
 const Aluno = () => import('@/views/admin/Aluno.vue');
 const Questao = () => import('@/views/admin/Questao.vue');
 
+const Questionario = () => import('@/views/admin/Questionario.vue');
+
+const Usuario = () => import('@/views/admin/Usuario.vue');
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -37,6 +41,14 @@ const router = new VueRouter({
 				{
 					path: '/questoes',
 					component: Questao,
+				},
+				{
+					path: '/questionario',
+					component: Questionario
+				},
+				{
+					path: '/usuarios',
+					component: Usuario,
 				},
 			]
 		},
