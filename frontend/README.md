@@ -1,4 +1,4 @@
-# abc english
+# Kids Learning Client
 
 ## Project setup
 ```

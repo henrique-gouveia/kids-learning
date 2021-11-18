@@ -1,7 +1,7 @@
 {
-  "name": "abc-english",
+  "name": "kids-learning",
   "version": "1.0.0",
-  "description": "ABC English",
+  "description": "Kids Learning",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
