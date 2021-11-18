@@ -1,5 +1,5 @@
 <template>
-	<AdminLayout
+	<ContentAdmin
 		icon="icon-note"
 		title="Questionário"
 		subtitle="Gerenciar"
@@ -52,7 +52,7 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table hover striped :fields="fields" :items="questionarios">
+		<b-table responsive hover striped :fields="fields" :items="questionarios">
 			<template #cell(actions)="data">
 				<router-link 
 					class="btn btn-info mr-2"
@@ -76,17 +76,17 @@
 			:total-rows="count"
 			:per-page="limit"
 		/>
-	</AdminLayout>
+	</ContentAdmin>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import AdminLayout from './AdminLayout.vue';
+import ContentAdmin from './template/ContentAdmin.vue';
 import { questionarios } from '@/data';
 
 @Component({
   components: {
-		AdminLayout
+		ContentAdmin
 	}
 })
 export default class Questionario extends Vue { 
@@ -101,7 +101,7 @@ export default class Questionario extends Vue {
     { key: 'turma', label: 'Turma', sortable: true },
     { key: 'inicio', label: 'Início', sortable: true },
     { key: 'fim', label: 'Fim', sortable: true },
-    { key: 'actions', label: 'Ações' }
+    { key: 'actions', label: 'Ações', class: 'd-flex' }
 	];
 
   public page = 1;

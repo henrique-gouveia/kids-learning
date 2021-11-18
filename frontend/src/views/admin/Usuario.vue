@@ -1,5 +1,5 @@
 <template>
-	<AdminLayout
+	<ContentAdmin
 		icon="icon-note"
 		title="Usuário"
 		subtitle="Gerenciar"
@@ -40,7 +40,7 @@
           <b-form-group label="Senha:" label-for="usuario-senha">
             <b-form-input 
               id="usuario-senha" 
-              type="senha" 
+              type="password"
               placeholder="Informe a Senha do Usuário..." 
               required
               v-model="usuario.senha" 
@@ -51,7 +51,7 @@
           <b-form-group label="Confirmação de Senha:" label-for="usuario-confirm-senha">
             <b-form-input 
               id="usuario-confirm-senha" 
-              type="senha" 
+              type="password" 
               placeholder="Confirme a Senha do Usuário..." 
               required
               v-model="usuario.confirmSenha" 
@@ -74,7 +74,7 @@
         </b-col>
       </b-row>
     </b-form>
-    <b-table hover striped :fields="fields" :items="usuarios">
+    <b-table responsive hover striped :fields="fields" :items="usuarios">
       <template slot="actions" slot-scope="data">
         <b-button variant="warning" @click="loadusuario(data.item)" class="mr-2">
           <i class="fa fa-pencil"></i>
@@ -91,16 +91,16 @@
 			:total-rows="count"
 			:per-page="limit"
 		/>
-	</AdminLayout>
+	</ContentAdmin>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import AdminLayout from './AdminLayout.vue';
+import ContentAdmin from './template/ContentAdmin.vue';
 
 @Component({
   components: {
-		AdminLayout
+		ContentAdmin
 	}
 })
 export default class Usuario extends Vue { 
@@ -115,7 +115,7 @@ export default class Usuario extends Vue {
     { key: 'email', label: 'E-mail', sortable: true },
     { key: 'admin', label: 'Administrador', sortable: true, 
       formatter: (value: unknown) => value ? 'Sim' : 'Não' },
-    { key: 'actions', label: 'Ações' }
+    { key: 'actions', label: 'Ações', class: 'd-flex' }
   ]
 
   public page = 1;

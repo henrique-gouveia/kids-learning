@@ -1,5 +1,5 @@
 <template>
-	<AdminLayout
+	<ContentAdmin
 		icon="icon-layers"
 		title="Administração"
 		subtitle="Turmas"
@@ -35,7 +35,7 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table hover striped :fields="fields" :items="turmas">
+		<b-table responsive hover striped :fields="fields" :items="turmas">
 			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadTurma(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
@@ -52,17 +52,17 @@
 			:total-rows="count"
 			:per-page="limit"
 		/>
-	</AdminLayout>
+	</ContentAdmin>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import AdminLayout from './AdminLayout.vue';
+import ContentAdmin from './template/ContentAdmin.vue';
 import { turmas } from '@/data';
 
 @Component({
   components: {
-		AdminLayout
+		ContentAdmin
 	}
 })
 export default class Class extends Vue { 
@@ -74,7 +74,7 @@ export default class Class extends Vue {
   public fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
     { key: 'nome', label: 'Nome', sortable: true },
-    { key: 'actions', label: 'Ações' }
+    { key: 'actions', label: 'Ações', class: 'd-flex' }
   ];
 
   public page = 1;

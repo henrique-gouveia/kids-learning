@@ -10,7 +10,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
 @Component({})
-export default class PageHeader extends Vue {
+export default class ContentHeader extends Vue {
   @Prop({ default: "" }) public icon!: string;
   @Prop({ default: "" }) public main!: string;
   @Prop({ default: "" }) public sub!: string;

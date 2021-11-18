@@ -78,7 +78,7 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import Footer from '@/views/template/Footer.vue';
-import NavBar from '@/components/NavBar.vue';
+import NavBar from '@/views/template/NavBar.vue';
 import { questoes } from '@/data';
 
 @Component({

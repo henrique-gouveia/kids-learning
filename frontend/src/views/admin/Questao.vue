@@ -1,5 +1,5 @@
 <template>
-	<AdminLayout
+	<ContentAdmin
 		icon="icon-layers"
 		title="Administração"
 		subtitle="Questões"
@@ -81,7 +81,7 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table hover striped :fields="fields" :items="questoes">
+		<b-table responsive hover striped :fields="fields" :items="questoes">
 			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadQuestao(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
@@ -98,17 +98,17 @@
 			:total-rows="count"
 			:per-page="limit"
 		/>
-	</AdminLayout>
+	</ContentAdmin>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import AdminLayout from './AdminLayout.vue';
+import ContentAdmin from './template/ContentAdmin.vue';
 import { questoes } from '@/data';
 
 @Component({
   components: {
-		AdminLayout
+		ContentAdmin
 	}
 })
 export default class Questao extends Vue { 
@@ -122,7 +122,7 @@ export default class Questao extends Vue {
 		{ key: 'id', label: 'Código', sortable: true },
     { key: 'tipo', label: 'Tipo', sortable: true },
     { key: 'titulo', label: 'Título', sortable: true },
-    { key: 'actions', label: 'Ações' }
+    { key: 'actions', label: 'Ações', class: 'd-flex' }
 	];
 
   public page = 1;

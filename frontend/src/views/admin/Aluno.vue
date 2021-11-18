@@ -1,5 +1,5 @@
 <template>
-	<AdminLayout
+	<ContentAdmin
 		icon="icon-layers"
 		title="Administração"
 		subtitle="Alunos"
@@ -56,7 +56,7 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table hover striped :fields="fields" :items="alunos">
+		<b-table responsive hover striped :fields="fields" :items="alunos">
 			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadAluno(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
@@ -73,17 +73,17 @@
 			:total-rows="count"
 			:per-page="limit"
 		/>
-	</AdminLayout>
+	</ContentAdmin>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import AdminLayout from './AdminLayout.vue';
+import ContentAdmin from './template/ContentAdmin.vue';
 import { alunos } from '@/data';
 
 @Component({
   components: {
-		AdminLayout
+		ContentAdmin
 	}
 })
 export default class Student extends Vue { 
@@ -98,7 +98,7 @@ export default class Student extends Vue {
     { key: 'turma', label: 'Turma', sortable: true },
     { key: 'matricula', label: 'Matrícula', sortable: true },
     { key: 'nome', label: 'Nome', sortable: true },
-    { key: 'actions', label: 'Ações' }
+    { key: 'actions', label: 'Ações', class: 'd-flex' }
   ];
 
   public page = 1;
