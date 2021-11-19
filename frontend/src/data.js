@@ -1,37 +1,17 @@
 export const turmas = [
 	{
 		id: 1,
-		nome: 'Turma 1',
+		nome: 'Turma A',
 	},
-	{
-		id: 2,
-		nome: 'Turma 2',
-	},
-	{
-		id: 3,
-		nome: 'Turma 3',
-	}
 ];
 
 export const alunos = [
 	{
 		id: 1,
 		matricula: 123,
-		turma: 'Turma 1',
+		turma: 'Turma A',
 		nome: 'Aluno 1',
 	},
-	{
-		id: 2,
-		matricula: 456,
-		turma: 'Turma 2',
-		nome: 'Aluno 2',
-	},
-	{
-		id: 3,
-		matricula: 789,
-		turma: 'Turma 3',
-		nome: 'Aluno 3',
-	}
 ]
 
 export const questoes = [
@@ -60,52 +40,6 @@ export const questoes = [
 		]
 	}, {
 		id: 2,
-		tipo: 'Textual',
-		titulo: "Como se diz são 9 horas?",
-		respostas: [
-			{
-				id: 4,
-				texto: "It's nine o'clock",
-				alternativa: "A",
-				selecionada: false,
-				correta: true
-			}, {
-				id: 5,
-				texto: "It's ten past nine",
-				alternativa: "B",
-				selecionada: false,
-			}, {
-				id: 6,
-				texto: "It's eleven o'clock",
-				alternativa: "C",
-				selecionada: false,
-			}
-		]
-	}, {
-		id: 3,
-		tipo: 'Textual',
-		titulo: "Como se diz mamão?",
-		respostas: [
-			{
-				id: 7,
-				texto: "Strawberry",
-				alternativa: "A",
-				selecionada: false,
-			}, {
-				id: 8,
-				texto: "Watermelon",
-				alternativa: "B",
-				selecionada: false,
-			}, {
-				id: 9,
-				texto: "Papaya",
-				alternativa: "C",
-				selecionada: false,
-				correta: true
-			}
-		]
-	}, {
-		id: 4,
 		tipo: 'Visual',
 		titulo: "Qual automóvel você vê na imagem?",
 		imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNCLifzLr7b-ju6NU8rr9RC-lorLjwtnPn4A&usqp=CAU",
@@ -129,7 +63,7 @@ export const questoes = [
 			}
 		]
 	}, {
-		id: 5,
+		id: 3,
 		tipo: 'Auditiva',
 		titulo: "Qual alternativa possui somente frutas citadas no audio?",
 		audioUrl: "@/assets/audios/fruits.mp3",
