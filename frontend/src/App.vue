@@ -6,5 +6,5 @@
 <style lang="scss">
   @import "@/assets/styles/bootstrap.scss";
   @import "@/assets/styles/app.scss";
-  @import "@/assets/styles/themes/theme-g.scss";
+  @import "@/assets/styles/themes/theme-b.scss";
 </style>

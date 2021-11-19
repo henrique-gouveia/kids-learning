@@ -14,10 +14,10 @@
       <ul class="navbar-nav mr-auto flex-row">
           <li class="nav-item">
             <a href="" class="nav-link d-none d-md-block d-lg-block d-xl-block" @click.prevent="toggleAsideCollapsed">
-              <em class="fas fa-bars"></em>
+              <em :class="`fas fa-chevron-${isCollapsed ? 'right' : 'left'}`"></em>
             </a>
             <a href="" class="nav-link sidebar-toggle d-md-none" @click.prevent="toggleOffcanvas">
-              <em class="fas fa-bars"></em>
+              <em :class="`fas fa-chevron-${isCollapsed ? 'right' : 'left'}`"></em>
             </a>
           </li>
         </ul>
@@ -35,11 +35,12 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Mutation } from 'vuex-class';
+import { Mutation, State } from 'vuex-class';
+import { ApplicationState } from '@/store/index';
 
 @Component
 export default class Header extends Vue {
-  navSearchOpen = false;
+  @State((state: ApplicationState) => state.setting.isCollapsed) isCollapsed!: boolean;
   @Mutation toggleSetting : any;
 
   /**
@@ -62,18 +63,6 @@ export default class Header extends Vue {
   toggleAsideCollapsed(): void {
     this.toggleSetting('isCollapsed')
     this.resize();
-  }
-
-  toggleUserBlock(): void {
-    this.toggleSetting('showUserBlock')
-  }
-
-  toggleNavSearch(): void {
-    this.navSearchOpen = !this.navSearchOpen;
-  }
-  
-  closeNavSearch(): void {
-    this.navSearchOpen = false;
   }
   
   signout(): void {
