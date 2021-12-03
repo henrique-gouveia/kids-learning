@@ -45,20 +45,14 @@
 				</b-button>
 			</template>
 		</b-table>
-		<b-pagination 
-			size="md"
-			class="mt-2"
-			v-model="page"
-			:total-rows="count"
-			:per-page="limit"
-		/>
 	</ContentAdmin>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
-import { turmas } from '@/data';
+import api from '@/services/api';
+import Turma from '@/models/turma';
 
 @Component({
   components: {
@@ -68,39 +62,73 @@ import { turmas } from '@/data';
 export default class Class extends Vue { 
 	mode = 'save';
 
-	turma = {}
-	turmas = turmas;
+	turma: Turma = new Turma();
+	turmas: Turma[] = [];
   
-  public fields: unknown[] = [
+  fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
     { key: 'nome', label: 'Nome', sortable: true },
     { key: 'actions', label: 'Ações', class: 'd-flex' }
   ];
 
-  public page = 1;
-  public limit = 0;
-  public count = 0;
-
-  public mounted(): void {
+  mounted(): void {
     this.loadTurmas();
   }
 
-  private async loadTurmas(): Promise<void> {}
+  async loadTurmas(): Promise<void> {
+    try {
+      const res = await api.get(`/turmas`);
+      if (res && res.data) {
+        this.turmas = res.data.map((t: unknown) => new Turma(t));
+      }
+    } catch (err) {
+      console.log(err);
+      this.turmas = [];
+    }
+  }
 
-  public loadTurma(turma, mode = 'save'): void {
+  async loadTurma(turma: Turma, mode = 'save'): Promise<void> {
     this.mode = mode;
-    this.turma = turma;
+    try {
+      const res = await api.get(`/turmas/${turma.id}`)
+      this.turma = new Turma(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  public reset(): void {
+  reset(): void {
     this.mode = 'save';
-    this.turma = {};
+    this.turma = new Turma();
     this.loadTurmas();
   }
 
-  public async save(): Promise<void> {}
+  async save(): Promise<void> {
+    const method = this.turma.id ? 'put' : 'post';
+    const id = this.turma.id ? `/${this.turma.id}` : '';
 
-  public async remove(): Promise<void> {}
+    try {
+      await api[method](`/turmas${id}`, { ...this.turma });
+      this.reset();
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async remove(): Promise<void> {
+    try {
+      await api.delete(`/turmas/${this.turma.id}`);
+      this.reset();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  @Watch('page')
+  onChangePage(): void {
+    this.loadTurmas();
+  }
+  
 }
 </script>
 

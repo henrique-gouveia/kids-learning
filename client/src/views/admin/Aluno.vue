@@ -7,13 +7,18 @@
 		<b-form>
 			<input id="aluno-id" type="hidden" v-model="aluno.id" />
 			<b-row>
-				<b-col sm="3" xs="12" v-if="mode === 'save'">
+				<b-col sm="3" xs="12">
 					<b-form-group label="Turma:" label-for="aluno-turma">
 						<b-form-select 
 							id="aluno-turma"
 							v-model="aluno.turmaId"
 							:options="turmas"
-						/>
+              :disabled="mode === 'remove'"
+						>
+              <template #first>
+                <b-form-select-option :value="0" disabled>Selecione a turma...</b-form-select-option>
+              </template>
+            </b-form-select>
 					</b-form-group>
 				</b-col>
 				<b-col sm="3" xs="12">
@@ -79,7 +84,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
-import { alunos } from '@/data';
+import api from '@/services/api';
+import Turma from '@/models/turma';
+import Aluno from '@/models/aluno';
 
 @Component({
   components: {
@@ -89,11 +96,11 @@ import { alunos } from '@/data';
 export default class Student extends Vue { 
 	mode = 'save';
 
-	aluno = {}
-	alunos = alunos;
-	turmas = [ 'Turma 1', 'Turma 2', 'Turma 3' ];
+	aluno: Aluno = new Aluno();
+	alunos: Aluno[] = [];
+	turmas: unknown[] = [];
   
-  public fields: unknown[] = [
+  fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
     { key: 'turma', label: 'Turma', sortable: true },
     { key: 'matricula', label: 'Matrícula', sortable: true },
@@ -101,30 +108,91 @@ export default class Student extends Vue {
     { key: 'actions', label: 'Ações', class: 'd-flex' }
   ];
 
-  public page = 1;
-  public limit = 0;
-  public count = 0;
+  page = 1;
+  limit = 0;
+  count = 0;
 
-  public mounted(): void {
+  mounted(): void {
     this.loadAlunos();
+    this.loadTurmas();
   }
 
-  private async loadAlunos(): Promise<void> {}
+  async loadAlunos(): Promise<void> {
+    try {
+      const res = await api.get(`/alunos?page=${this.page}`);
+      if (res && res.data) {
+        const { data, count, limit } = res.data;
 
-  public loadAluno(aluno, mode = 'save'): void {
+        this.alunos = data.map((a: unknown) => new Aluno(a));
+        this.count = count;
+        this.limit = limit;
+      }
+    } catch (err) {
+      console.log(err);
+      this.alunos = [];
+    }
+  }
+
+  async loadTurmas(): Promise<void> {
+    try {
+      const res = await api.get(`/turmas`);
+      if (res && res.data) {
+        this.turmas = res.data.map((t: Turma) => ({ value: t.id, text: t.nome }));
+      }
+    } catch (err) {
+      console.log(err);
+      this.turmas = [];
+    }
+  }
+
+  async loadAluno(aluno: Aluno, mode = 'save'): Promise<void> {
     this.mode = mode;
-    this.aluno = aluno;
+    try {
+      const res = await api.get(`/alunos/${aluno.id}`)
+      this.aluno = new Aluno(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  public reset(): void {
+  reset(): void {
     this.mode = 'save';
-    this.aluno = {};
+    this.aluno = new Aluno();
     this.loadAlunos();
   }
 
-  public async save(): Promise<void> {}
+  async save(): Promise<void> {
+    const method = this.aluno.id ? 'put' : 'post';
+    const id = this.aluno.id ? `/${this.aluno.id}` : '';
 
-  public async remove(): Promise<void> {}
+    try {
+      const aluno = { 
+        id: this.aluno.id,
+        turmaId: this.aluno.turmaId,
+        matricula: this.aluno.matricula,
+        nome: this.aluno.nome
+      };
+
+      await api[method](`/alunos${id}`, { ...aluno });
+
+      // this.$toasted.global.defaultSuccess();
+      this.reset();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async remove(): Promise<void> {
+    const id = this.aluno.id;
+    try {
+      await api.delete(`/alunos/${id}`);
+
+      // this.$toasted.global.defaultSuccess();
+      this.reset();
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
 </script>
 

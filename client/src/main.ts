@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import './config/vendor.js';
 import './config/bootstrap';
+import './config/vue-editor';
 
 import App from './App.vue'
 import router from './router'

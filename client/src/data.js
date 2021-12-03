@@ -17,71 +17,71 @@ export const alunos = [
 export const questoes = [
 	{
 		id: 1,
-		tipo: 'Textual',
-		titulo: "Como se escreve o número 1?",
+		tipo: 'Vocabulário',
+		enunciado: "Como se escreve o número 1?",
 		respostas: [
 			{
 				id: 1,
 				alternativa: "A",
-				texto: "Eleven",
+				descricao: "Eleven",
 				selecionada: false,
 			}, {
 				id: 2,
-				texto: "One",
+				descricao: "One",
 				alternativa: "B",
 				selecionada: false,
 				correta: true
 			}, {
 				id: 3,
-				texto: "Ten",
+				descricao: "Ten",
 				alternativa: "C",
 				selecionada: false,
 			}
 		]
 	}, {
 		id: 2,
-		tipo: 'Visual',
-		titulo: "Qual automóvel você vê na imagem?",
+		tipo: 'Vocabulário',
+		enunciado: "Qual automóvel você vê na imagem?",
 		imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNCLifzLr7b-ju6NU8rr9RC-lorLjwtnPn4A&usqp=CAU",
 		respostas: [
 			{
 				id: 10,
-				texto: "Bus",
+				descricao: "Bus",
 				alternativa: "A",
 				selecionada: false,
 				correta: true
 			}, {
 				id: 11,
-				texto: "Motocycle",
+				descricao: "Motocycle",
 				alternativa: "B",
 				selecionada: false,
 			}, {
 				id: 12,
-				texto: "Airplane",
+				descricao: "Airplane",
 				alternativa: "C",
 				selecionada: false,
 			}
 		]
 	}, {
 		id: 3,
-		tipo: 'Auditiva',
-		titulo: "Qual alternativa possui somente frutas citadas no audio?",
+		tipo: 'Audição',
+		enunciado: "Qual alternativa possui somente frutas citadas no audio?",
 		audioUrl: "@/assets/audios/fruits.mp3",
 		respostas: [
 			{
 				id: 13,
-				texto: "Meat, Pears, Grapes",
+				descricao: "Meat, Pears, Grapes",
 				alternativa: "A",
 				selecionada: false,
 			}, {
 				id: 14,
-				texto: "Apple, Orange, Pineapple, Lemon and Banana",
+				descricao: "Apple, Orange, Pineapple, Lemon and Banana",
 				alternativa: "B",
 				selecionada: false,
 				correta: true
 			}, {
 				id: 15,
-				texto: "Apple, Orange, Milk and eggs",
+				descricao: "Apple, Orange, Milk and eggs",
 				alternativa: "C",
 				selecionada: false,
 			}

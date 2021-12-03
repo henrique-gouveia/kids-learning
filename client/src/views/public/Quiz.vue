@@ -10,7 +10,7 @@
               variant="purple"
               class="text-left"
             >
-              {{ currentQuestao.titulo }}
+              {{ currentQuestao.enunciado }}
             </b-button>
           </b-card-header>
           <b-collapse id="ask-accordion" visible accordion="ask-accordion" role="tabpanel">
@@ -57,7 +57,7 @@
                   </b-col>
                   <b-col md="11">
                     <b-card-body>
-                      <b-card-text>{{ resposta.texto }}</b-card-text>
+                      <b-card-text>{{ resposta.descricao }}</b-card-text>
                     </b-card-body>
                   </b-col>
                 </b-row>
