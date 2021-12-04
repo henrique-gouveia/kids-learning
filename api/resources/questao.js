@@ -45,8 +45,8 @@ module.exports = app => {
     const saveRespostas = async (questaoId, respostas) => {
         respostas = respostas.map(r => ({ ...r, questaoId }))
 
-        await app.db('respostas').where({ questaoId }).del()
-        await app.db('respostas').insert(respostas)
+        await app.db('questao_respostas').where({ questaoId }).del()
+        await app.db('questao_respostas').insert(respostas)
     }
 
     const remove = async (req, res) => {
@@ -54,7 +54,7 @@ module.exports = app => {
             const questaoId = req.params.id
             existsOrError(questaoId, 'Código da Questão não informada')
 
-            await app.db('respostas').where({ questaoId }).del()
+            await app.db('questao_respostas').where({ questaoId }).del()
             const rowsDeleted = await app.db('questoes').where({ id: questaoId }).del()
 
             existsOrError(rowsDeleted, 'Questão não foi encontrada')
@@ -85,10 +85,11 @@ module.exports = app => {
             const questao = await app.db('questoes')
                 .select('id', 'tipo', 'enunciado', 'texto', 'imagemUrl', 'audioUrl')
                 .where({ id: req.params.id })
+                .orderBy('id')
                 .first()
                 
-            const respostas = await app.db('respostas')
-                .select('questaoId', 'alternativa', 'descricao')
+            const respostas = await app.db('questao_respostas')
+                .select('questaoId', 'alternativa', 'descricao', 'correta')
                 .where({ questaoId: questao.id })
 
             questao.texto = (questao.texto || '').toString()

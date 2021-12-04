@@ -33,4 +33,13 @@ module.exports = app => {
         .get(app.resources.questao.getById)
         .put(app.resources.questao.save)
         .delete(app.resources.questao.remove)
+        
+    app.route('/questionarios')
+        .get(app.resources.questionario.get)
+        .post(app.resources.questionario.save)
+
+    app.route('/questionarios/:id')
+        .get(app.resources.questionario.getById)
+        .put(app.resources.questionario.save)
+        .delete(app.resources.questionario.remove)
 }

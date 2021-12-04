@@ -1,4 +1,4 @@
-import Resposta from "./resposta";
+import QuestaoReposta from "./questaoReposta";
 
 export default class Questao {
     public id!: number;
@@ -8,7 +8,7 @@ export default class Questao {
     public imagemUrl?: string;
     public audioUrl?: string;
     
-    private _respostas: Resposta[] = [];
+    private _respostas: QuestaoReposta[] = [];
 
     constructor(data: any = {}) {
         if (!data) {
@@ -24,10 +24,19 @@ export default class Questao {
         this._respostas = data.respostas || [];
 
         if (this._respostas.length === 0)
-            this._respostas = [ new Resposta() ]
+            this._respostas = [ new QuestaoReposta({ correta: true } )];
     }
 
-    public get respostas(): Resposta[] {
+    public get alternativaCorreta(): number {
+        const resposta = this._respostas.filter(r => r.correta === true)[0] || {};
+        return resposta.alternativa || 0;
+    }
+
+    public set alternativaCorreta(value: number) {
+        this._respostas = this._respostas.map(r => ({ ...r, correta: r.alternativa == value }));
+    }
+
+    public get respostas(): QuestaoReposta[] {
         return this._respostas;
     }
 
@@ -35,7 +44,7 @@ export default class Questao {
         const alternativas = this._respostas.map(r => r.alternativa);
         const alternativa = alternativas.reduce((a, b) => Math.max(a, b)) + 1;
 
-        this._respostas.push(new Resposta({ questaoId: this.id, alternativa }));
+        this._respostas.push(new QuestaoReposta({ questaoId: this.id, alternativa }));
     }
 
     public removeReposta(alternativa: number): void {

@@ -1,8 +1,8 @@
 <template>
 	<ContentAdmin
 		icon="icon-note"
-		title="Usuário"
-		subtitle="Gerenciar"
+		title="Administração"
+		subtitle="Usuário"
 	>
     <b-form>
       <input id="usuario-id" type="hidden" v-model="usuario.id" />
@@ -103,7 +103,7 @@ import ContentAdmin from './template/ContentAdmin.vue';
 		ContentAdmin
 	}
 })
-export default class Usuario extends Vue { 
+export default class UsuarioView extends Vue { 
 	mode = 'save';
 
 	usuario = {};

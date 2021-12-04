@@ -85,12 +85,31 @@
                 :key="idx"
               >
 								<b-input-group>
+                  <b-input-group-prepend 
+                    is-text 
+                    class="input-group-prepend-md"
+                    v-b-tooltip.hover 
+                    title="Selecionar como a resposta correta"
+                  >
+                    <b-form-radio 
+                      class="mr-n2"
+                      name="questao-resposta-correta"
+                      v-model="questao.alternativaCorreta"
+                      :value="questao.respostas[idx].alternativa"
+                    >
+                      <span class="sr-only">Selecionar como a resposta correta</span>
+                    </b-form-radio>
+                  </b-input-group-prepend>
+
 									<b-form-input 
 										placeholder="Informe a resposta..."
                     v-model="questao.respostas[idx].descricao"
                     :readonly="mode == 'remove'"
+                    class="form-control"
+                    :class="{ 'is-valid': questao.respostas[idx].correta }"
 									/>
-									<b-input-group-append v-if="mode != 'remove'">
+
+									<b-input-group-append class="input-group-append-md">
 										<b-button variant="success" class=" ml-1 mr-1" @click="() => questao.AddResposta()">
 											<em class="fa fa-plus"></em>
 										</b-button>
@@ -140,17 +159,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
+import View from '@/models/view';
 import Questao from '@/models/questao';
 
 @Component({
   components: {
-		ContentAdmin
+    ContentAdmin
 	}
 })
-export default class Question extends Vue { 
+export default class QuestaoView extends View { 
 	mode = 'save';
 
 	questao = new Questao();
@@ -183,8 +203,8 @@ export default class Question extends Vue {
         this.count = count;
         this.limit = limit;
       }
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      this.showError(err);
       this.questoes = [];
     }
   }
@@ -194,8 +214,8 @@ export default class Question extends Vue {
     try {
       const res = await api.get(`/questoes/${questao.id}`)
       this.questao = new Questao(res.data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      this.showError(err);
     }
   }
 
@@ -222,10 +242,10 @@ export default class Question extends Vue {
 
       await api[method](`/questoes${id}`, { ...questao });
 
-      // this.$toasted.global.defaultSuccess();
+      this.showSuccess();
       this.reset();
     } catch (err) {
-      console.log(err);
+      this.showError(err);
     }
   }
 
@@ -234,10 +254,10 @@ export default class Question extends Vue {
     try {
       await api.delete(`/questoes/${id}`);
 
-      // this.$toasted.global.defaultSuccess();
+      this.showSuccess();
       this.reset();
     } catch (err) {
-      console.log(err);
+      this.showError(err);
     }
   }
 }

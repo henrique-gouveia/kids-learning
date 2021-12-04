@@ -82,9 +82,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
+import View from '@/models/view';
 import Turma from '@/models/turma';
 import Aluno from '@/models/aluno';
 
@@ -93,7 +94,7 @@ import Aluno from '@/models/aluno';
 		ContentAdmin
 	}
 })
-export default class Student extends Vue { 
+export default class AlunoView extends View { 
 	mode = 'save';
 
 	aluno: Aluno = new Aluno();
@@ -113,8 +114,8 @@ export default class Student extends Vue {
   count = 0;
 
   mounted(): void {
-    this.loadAlunos();
     this.loadTurmas();
+    this.loadAlunos();
   }
 
   async loadAlunos(): Promise<void> {
@@ -128,7 +129,7 @@ export default class Student extends Vue {
         this.limit = limit;
       }
     } catch (err) {
-      console.log(err);
+      this.showError(err);
       this.alunos = [];
     }
   }
@@ -140,7 +141,7 @@ export default class Student extends Vue {
         this.turmas = res.data.map((t: Turma) => ({ value: t.id, text: t.nome }));
       }
     } catch (err) {
-      console.log(err);
+      this.showError(err);
       this.turmas = [];
     }
   }
@@ -151,7 +152,7 @@ export default class Student extends Vue {
       const res = await api.get(`/alunos/${aluno.id}`)
       this.aluno = new Aluno(res.data);
     } catch (err) {
-      console.log(err);
+      this.showError(err);
     }
   }
 
@@ -175,10 +176,10 @@ export default class Student extends Vue {
 
       await api[method](`/alunos${id}`, { ...aluno });
 
-      // this.$toasted.global.defaultSuccess();
+      this.showSuccess();
       this.reset();
     } catch (err) {
-      console.log(err);
+      this.showError(err);
     }
   }
 
@@ -187,10 +188,10 @@ export default class Student extends Vue {
     try {
       await api.delete(`/alunos/${id}`);
 
-      // this.$toasted.global.defaultSuccess();
+      this.showSuccess();
       this.reset();
     } catch (err) {
-      console.log(err);
+      this.showError();
     }
   }
 }

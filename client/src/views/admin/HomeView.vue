@@ -57,7 +57,7 @@ import ContentHeader from "./template/ContentHeader.vue";
 		InfoCard
   },
 })
-export default class Home extends Vue {}
+export default class HomeView extends Vue {}
 </script>
 
 <style lang="scss">

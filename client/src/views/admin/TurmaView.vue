@@ -49,9 +49,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
+import View from '@/models/view';
 import Turma from '@/models/turma';
 
 @Component({
@@ -59,7 +60,7 @@ import Turma from '@/models/turma';
 		ContentAdmin
 	}
 })
-export default class Class extends Vue { 
+export default class TurmaView extends View { 
 	mode = 'save';
 
 	turma: Turma = new Turma();
@@ -82,7 +83,7 @@ export default class Class extends Vue {
         this.turmas = res.data.map((t: unknown) => new Turma(t));
       }
     } catch (err) {
-      console.log(err);
+      this.showError(err);
       this.turmas = [];
     }
   }
@@ -93,7 +94,7 @@ export default class Class extends Vue {
       const res = await api.get(`/turmas/${turma.id}`)
       this.turma = new Turma(res.data);
     } catch (err) {
-      console.log(err);
+      this.showError(err);
     }
   }
 
@@ -107,20 +108,25 @@ export default class Class extends Vue {
     const method = this.turma.id ? 'put' : 'post';
     const id = this.turma.id ? `/${this.turma.id}` : '';
 
+    let res = {};
     try {
-      await api[method](`/turmas${id}`, { ...this.turma });
+      res = await api[method](`/turmas${id}`, { ...this.turma });
+      
+      this.showSuccess();
       this.reset();
-    } catch (err) {
-      console.log(err)
+    } catch (err: any) {
+      this.showError(err);
     }
   }
 
   async remove(): Promise<void> {
     try {
       await api.delete(`/turmas/${this.turma.id}`);
+
+      this.showSuccess();
       this.reset();
     } catch (err) {
-      console.log(err);
+      this.showError(err);
     }
   }
 

@@ -106,6 +106,18 @@
 .input-group-prepend { margin-right: -$input-border-width; }
 .input-group-append { margin-left: -$input-border-width; }
 
+.input-group-prepend-sm, .input-group-append-sm {
+  height: $input-height-sm;
+}
+
+.input-group-prepend-md, .input-group-append-md {
+  height: $input-height;
+}
+
+.input-group-prepend-lg, .input-group-append-lg {
+  height: $input-height-lg;
+}
+
 
 // Textual addons
 //

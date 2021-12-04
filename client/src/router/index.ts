@@ -6,16 +6,15 @@ import AdminLayout from '@/views/admin/template/Layout.vue';
 import PublicLayout from '@/views/public/template/Layout.vue';
 
 // Views
-const Home = () => import('@/views/admin/Home.vue');
+const Home = () => import('@/views/admin/HomeView.vue');
 
-const Turma = () => import('@/views/admin/Turma.vue');
-const Aluno = () => import('@/views/admin/Aluno.vue');
-const Questao = () => import('@/views/admin/Questao.vue');
+const Turma = () => import('@/views/admin/TurmaView.vue');
+const Aluno = () => import('@/views/admin/AlunoView.vue');
+const Questao = () => import('@/views/admin/QuestaoView.vue');
+const Questionario = () => import('@/views/admin/QuestionarioView.vue');
+const Usuario = () => import('@/views/admin/UsuarioView.vue');
 
-const Questionario = () => import('@/views/admin/Questionario.vue');
 const Quiz = () => import('@/views/public/Quiz.vue');
-
-const Usuario = () => import('@/views/admin/Usuario.vue');
 
 Vue.use(VueRouter);
 
@@ -45,7 +44,7 @@ const router = new VueRouter({
 					component: Questao,
 				},
 				{
-					path: '/questionario',
+					path: '/questionarios',
 					component: Questionario
 				},
 				{
@@ -60,7 +59,7 @@ const router = new VueRouter({
 			component: PublicLayout,
 			children: [
 				{
-					path: '/questionario/:id/quiz',
+					path: '/questionarios/:id/quiz',
 					component: Quiz,
 				}
 			]

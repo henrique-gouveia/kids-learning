@@ -51,9 +51,10 @@ module.exports = app => {
         const count = parseInt(result)
 
         app.db({ a: 'alunos', t: 'turmas' })
-            .select('a.id', { turmaId: 't.id' }, { turma: 't.nome' }, 't.nome', 'a.matricula', 'a.nome')
+            .select('a.id', { turmaId: 't.id' }, { turma: 't.nome' }, 'a.matricula', 'a.nome')
             .limit(limit).offset(page * limit - limit)
             .whereRaw('?? = ??', ['t.id', 'a.turmaId'])
+            .orderBy('a.id')
             .then(alunos => res.json({ data: alunos, count, limit }))
             .catch(err => res.status(500).send(err))
     }

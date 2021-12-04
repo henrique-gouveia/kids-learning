@@ -1,8 +1,10 @@
 import Vue from 'vue'
 
-import './config/vendor.js';
+import './config/vendor';
+import './config/filters'
 import './config/bootstrap';
 import './config/vue-editor';
+import './config/vue-toasted';
 
 import App from './App.vue'
 import router from './router'

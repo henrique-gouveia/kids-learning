@@ -46,6 +46,7 @@ module.exports = app => {
     const get = async (req, res) => {
         app.db('turmas')
             .select('id', 'nome')
+            .orderBy('id')
             .then(turmas => res.json(turmas))
             .catch(err => res.status(500).send(err))
     }

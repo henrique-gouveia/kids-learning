@@ -19,5 +19,9 @@ module.exports = app => {
         if (valueA !== valueB) throw message
     }
 
-    return { existsOrError, notExistsOrError, equalsOrError }
+    function greaterOrEqualThanOrError(valuaA, valueB, message) {
+        if (valuaA < valueB) throw message
+    }
+
+    return { existsOrError, notExistsOrError, equalsOrError, greaterOrEqualThanOrError }
 }
