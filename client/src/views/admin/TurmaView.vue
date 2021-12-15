@@ -9,13 +9,13 @@
 			<b-row>
 				<b-col sm="12">
 					<b-form-group label="Nome:" label-for="turma-nome">
-						<b-form-input 
-							id="turma-nome" 
-							type="text" 
-							placeholder="Informe o nome do Turma..." 
+						<b-form-input
+							id="turma-nome"
+							type="text"
+							placeholder="Informe o nome do Turma..."
 							required
 							:readonly="mode == 'remove'"
-							v-model="turma.nome" 
+							v-model="turma.nome"
 						/>
 					</b-form-group>
 				</b-col>
@@ -35,7 +35,24 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table responsive hover striped :fields="fields" :items="turmas">
+		<b-table
+      responsive
+      hover
+      striped
+      show-empty
+      :fields="fields"
+      :items="turmas"
+      :busy="loading"
+    >
+      <template #table-busy>
+        <div class="text-center my-1">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong class="align-middle ml-2">Carregando...</strong>
+        </div>
+      </template>
+      <template #empty class="text-center">
+        <p class="text-center">Nenhuma turma encontrada</p>
+      </template>
 			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadTurma(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
@@ -49,7 +66,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
 import View from '@/models/view';
@@ -60,12 +77,13 @@ import Turma from '@/models/turma';
 		ContentAdmin
 	}
 })
-export default class TurmaView extends View { 
+export default class TurmaView extends View {
 	mode = 'save';
+  loading = false;
 
 	turma: Turma = new Turma();
 	turmas: Turma[] = [];
-  
+
   fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
     { key: 'nome', label: 'Nome', sortable: true },
@@ -77,6 +95,7 @@ export default class TurmaView extends View {
   }
 
   async loadTurmas(): Promise<void> {
+    this.loading = true;
     try {
       const res = await api.get(`/turmas`);
       if (res && res.data) {
@@ -85,6 +104,8 @@ export default class TurmaView extends View {
     } catch (err) {
       this.showError(err);
       this.turmas = [];
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -98,20 +119,13 @@ export default class TurmaView extends View {
     }
   }
 
-  reset(): void {
-    this.mode = 'save';
-    this.turma = new Turma();
-    this.loadTurmas();
-  }
-
   async save(): Promise<void> {
     const method = this.turma.id ? 'put' : 'post';
     const id = this.turma.id ? `/${this.turma.id}` : '';
 
-    let res = {};
     try {
-      res = await api[method](`/turmas${id}`, { ...this.turma });
-      
+      await api[method](`/turmas${id}`, { ...this.turma });
+
       this.showSuccess();
       this.reset();
     } catch (err: any) {
@@ -130,11 +144,11 @@ export default class TurmaView extends View {
     }
   }
 
-  @Watch('page')
-  onChangePage(): void {
+  reset(): void {
+    this.mode = 'save';
+    this.turma = new Turma();
     this.loadTurmas();
   }
-  
 }
 </script>
 

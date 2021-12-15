@@ -9,7 +9,7 @@
 			<b-row>
 				<b-col sm="3" xs="12">
 					<b-form-group label="Turma:" label-for="aluno-turma">
-						<b-form-select 
+						<b-form-select
 							id="aluno-turma"
 							v-model="aluno.turmaId"
 							:options="turmas"
@@ -61,7 +61,24 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table responsive hover striped :fields="fields" :items="alunos">
+		<b-table
+      responsive
+      hover
+      striped
+      show-empty
+      :fields="fields"
+      :items="alunos"
+      :busy="loading"
+    >
+      <template #table-busy>
+        <div class="text-center my-1">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong class="align-middle ml-2">Carregando...</strong>
+        </div>
+      </template>
+      <template #empty class="text-center">
+        <p class="text-center">Nenhum aluno encontrado</p>
+      </template>
 			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadAluno(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
@@ -71,7 +88,7 @@
 				</b-button>
 			</template>
 		</b-table>
-		<b-pagination 
+		<b-pagination
 			size="md"
 			class="mt-2"
 			v-model="page"
@@ -82,7 +99,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
 import View from '@/models/view';
@@ -94,13 +111,14 @@ import Aluno from '@/models/aluno';
 		ContentAdmin
 	}
 })
-export default class AlunoView extends View { 
+export default class AlunoView extends View {
 	mode = 'save';
+  loading = false;
 
 	aluno: Aluno = new Aluno();
 	alunos: Aluno[] = [];
 	turmas: unknown[] = [];
-  
+
   fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
     { key: 'turma', label: 'Turma', sortable: true },
@@ -119,6 +137,7 @@ export default class AlunoView extends View {
   }
 
   async loadAlunos(): Promise<void> {
+    this.loading = true;
     try {
       const res = await api.get(`/alunos?page=${this.page}`);
       if (res && res.data) {
@@ -131,6 +150,8 @@ export default class AlunoView extends View {
     } catch (err) {
       this.showError(err);
       this.alunos = [];
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -156,18 +177,12 @@ export default class AlunoView extends View {
     }
   }
 
-  reset(): void {
-    this.mode = 'save';
-    this.aluno = new Aluno();
-    this.loadAlunos();
-  }
-
   async save(): Promise<void> {
     const method = this.aluno.id ? 'put' : 'post';
     const id = this.aluno.id ? `/${this.aluno.id}` : '';
 
     try {
-      const aluno = { 
+      const aluno = {
         id: this.aluno.id,
         turmaId: this.aluno.turmaId,
         matricula: this.aluno.matricula,
@@ -193,6 +208,17 @@ export default class AlunoView extends View {
     } catch (err) {
       this.showError();
     }
+  }
+
+  reset(): void {
+    this.mode = 'save';
+    this.aluno = new Aluno();
+    this.loadAlunos();
+  }
+
+  @Watch('page')
+  onChangePage(): void {
+    this.loadAlunos();
   }
 }
 </script>

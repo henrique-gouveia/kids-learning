@@ -35,14 +35,14 @@ const Menu: ISidebarMenu = [
                 name: 'Questões',
                 path: 'questoes'
             },
-            {
-                name: 'Questionários',
-                path: 'questionarios'
-            },
-            {
-                name: 'Usuários',
-                path: 'usuarios'
-            }
+            // {
+            //     name: 'Questionários',
+            //     path: 'questionarios'
+            // },
+            // {
+            //     name: 'Usuários',
+            //     path: 'usuarios'
+            // }
         ]
     },
 ];

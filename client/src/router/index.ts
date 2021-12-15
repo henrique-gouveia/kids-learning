@@ -11,8 +11,8 @@ const Home = () => import('@/views/admin/HomeView.vue');
 const Turma = () => import('@/views/admin/TurmaView.vue');
 const Aluno = () => import('@/views/admin/AlunoView.vue');
 const Questao = () => import('@/views/admin/QuestaoView.vue');
-const Questionario = () => import('@/views/admin/QuestionarioView.vue');
-const Usuario = () => import('@/views/admin/UsuarioView.vue');
+// const Questionario = () => import('@/views/admin/QuestionarioView.vue');
+// const Usuario = () => import('@/views/admin/UsuarioView.vue');
 
 const Quiz = () => import('@/views/public/Quiz.vue');
 
@@ -43,14 +43,14 @@ const router = new VueRouter({
 					path: '/questoes',
 					component: Questao,
 				},
-				{
-					path: '/questionarios',
-					component: Questionario
-				},
-				{
-					path: '/usuarios',
-					component: Usuario,
-				},
+				// {
+				// 	path: '/questionarios',
+				// 	component: Questionario
+				// },
+				// {
+				// 	path: '/usuarios',
+				// 	component: Usuario,
+				// },
 			]
 		},
 		// public

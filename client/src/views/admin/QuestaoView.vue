@@ -9,9 +9,9 @@
 			<b-row>
 				<b-col sm="4" xs="12">
 					<b-form-group label="Tipo:" label-for="questao-tipo">
-            <b-form-radio-group 
+            <b-form-radio-group
 							id="questao-tipo"
-							v-model="questao.tipo"              
+							v-model="questao.tipo"
 							:options="tipos"
               :disabled="mode === 'remove'"
             />
@@ -34,9 +34,9 @@
 			</b-row>
 			<b-row>
 				<b-col xs="12">
-					<b-form-group 
+					<b-form-group
             v-if="questao.tipo === 'Leitura' && mode === 'save'"
-            label="Texto:" 
+            label="Texto:"
             label-for="questao-texto"
           >
             <VueEditor
@@ -44,9 +44,9 @@
               placeholder="Informe o texto da Questão (Opcional)..."
             />
           </b-form-group>
-					<b-form-group 
+					<b-form-group
             v-else-if="questao.tipo === 'Vocabulário'"
-            label="Imagem:" 
+            label="Imagem:"
             label-for="questao-imagem-url"
           >
 						<b-form-input
@@ -58,9 +58,9 @@
 							v-model="questao.imagemUrl"
 						/>
 					</b-form-group>
-					<b-form-group 
+					<b-form-group
             v-else-if="questao.tipo === 'Audição'"
-            label="Audio:" 
+            label="Audio:"
             label-for="questao-audio-url"
           >
 						<b-form-input
@@ -78,20 +78,20 @@
 				<b-col cols="12">
 					<b-form-group label="Respostas:">
 						<b-row>
-							<b-col 
-                sm="12" 
-                class="mb-2"                 
+							<b-col
+                sm="12"
+                class="mb-2"
                 v-for="(resposta, idx) in questao.respostas"
                 :key="idx"
               >
 								<b-input-group>
-                  <b-input-group-prepend 
-                    is-text 
+                  <b-input-group-prepend
+                    is-text
                     class="input-group-prepend-md"
-                    v-b-tooltip.hover 
+                    v-b-tooltip.hover
                     title="Selecionar como a resposta correta"
                   >
-                    <b-form-radio 
+                    <b-form-radio
                       class="mr-n2"
                       name="questao-resposta-correta"
                       v-model="questao.alternativaCorreta"
@@ -101,7 +101,7 @@
                     </b-form-radio>
                   </b-input-group-prepend>
 
-									<b-form-input 
+									<b-form-input
 										placeholder="Informe a resposta..."
                     v-model="questao.respostas[idx].descricao"
                     :readonly="mode == 'remove'"
@@ -138,7 +138,24 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table responsive hover striped :fields="fields" :items="questoes">
+		<b-table
+      responsive
+      hover
+      striped
+      show-empty
+      :fields="fields"
+      :items="questoes"
+      :busy="loading"
+    >
+      <template #table-busy>
+        <div class="text-center my-1">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong class="align-middle ml-2">Carregando...</strong>
+        </div>
+      </template>
+      <template #empty class="text-center">
+        <p class="text-center">Nenhuma questão encontrada</p>
+      </template>
 			<template #cell(actions)="data">
 				<b-button variant="warning" @click="loadQuestao(data.item)" class="mr-2">
 					<i class="fas fa-pencil-alt"></i>
@@ -148,7 +165,7 @@
 				</b-button>
 			</template>
 		</b-table>
-		<b-pagination 
+		<b-pagination
 			size="md"
 			class="mt-2"
 			v-model="page"
@@ -159,7 +176,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
 import View from '@/models/view';
@@ -170,14 +187,15 @@ import Questao from '@/models/questao';
     ContentAdmin
 	}
 })
-export default class QuestaoView extends View { 
+export default class QuestaoView extends View {
 	mode = 'save';
+  loading = false;
 
 	questao = new Questao();
 	questoes: Questao[] = [];
 
 	tipos = [ 'Vocabulário', 'Leitura', 'Audição' ];
-  
+
   fields: unknown[] = [
 		{ key: 'id', label: 'Código', sortable: true },
     { key: 'tipo', label: 'Tipo', sortable: true },
@@ -194,6 +212,7 @@ export default class QuestaoView extends View {
   }
 
   async loadQuestoes(): Promise<void> {
+    this.loading = true;
     try {
       const res = await api.get(`/questoes?page=${this.page}`);
       if (res && res.data) {
@@ -206,10 +225,12 @@ export default class QuestaoView extends View {
     } catch (err) {
       this.showError(err);
       this.questoes = [];
+    } finally {
+      this.loading = false;
     }
   }
 
-  async loadQuestao(questao, mode = 'save'): Promise<void> {
+  async loadQuestao(questao: Questao, mode = 'save'): Promise<void> {
     this.mode = mode;
     try {
       const res = await api.get(`/questoes/${questao.id}`)
@@ -219,18 +240,12 @@ export default class QuestaoView extends View {
     }
   }
 
-  reset(): void {
-    this.mode = 'save';
-    this.questao = new Questao();
-    this.loadQuestoes();
-  }
-
   async save(): Promise<void> {
     const method = this.questao.id ? 'put' : 'post';
     const id = this.questao.id ? `/${this.questao.id}` : '';
 
     try {
-      const questao = { 
+      const questao = {
         id: this.questao.id,
         tipo: this.questao.tipo,
         enunciado: this.questao.enunciado,
@@ -259,6 +274,17 @@ export default class QuestaoView extends View {
     } catch (err) {
       this.showError(err);
     }
+  }
+
+  reset(): void {
+    this.mode = 'save';
+    this.questao = new Questao();
+    this.loadQuestoes();
+  }
+
+  @Watch('page')
+  onChangePage(): void {
+    this.loadQuestoes();
   }
 }
 </script>
