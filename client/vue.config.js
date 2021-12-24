@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const path = require('path')
 
 module.exports = {
     lintOnSave: false,
@@ -19,7 +20,12 @@ module.exports = {
                 'window.jQuery': 'jquery',
                 jQuery: 'jquery'
             })
-        ]
+        ],
+        resolve: {
+            alias: {
+                vue$: path.resolve(__dirname, 'node_modules/vue/dist/vue.runtime.esm.js'),
+            },
+        }
     },
     transpileDependencies: [
         'resize-detector' // vue-echarts

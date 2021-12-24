@@ -4,6 +4,7 @@ import './config/vendor';
 import './config/filters'
 import './config/bootstrap';
 import './config/vue-editor';
+import './config/vue-file-agent';
 import './config/vue-toasted';
 
 import App from './App.vue'

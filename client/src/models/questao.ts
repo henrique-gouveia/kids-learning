@@ -1,13 +1,14 @@
+import Arquivo from "./Arquivo";
 import QuestaoReposta from "./questaoReposta";
 
 export default class Questao {
     public id!: number;
+    public arquivoId?: number;
+    public arquivo?: Arquivo;
     public tipo!: string;
     public enunciado!: string;
     public texto?: string;
-    public imagemUrl?: string;
-    public audioUrl?: string;
-    
+
     private _respostas: QuestaoReposta[] = [];
 
     constructor(data: any = {}) {
@@ -16,11 +17,16 @@ export default class Questao {
         }
 
         this.id = data.id || 0;
+        this.arquivoId = data.arquivoId || null;
+
+        if (data.arquivo) {
+            this.arquivo = new Arquivo(data.arquivo)
+        }
+
         this.tipo = data.tipo || 'Vocabulário';
         this.enunciado = data.enunciado || '';
         this.texto = data.texto;
-        this.imagemUrl = data.imagemUrl;
-        this.audioUrl = data.audioUrl;
+
         this._respostas = data.respostas || [];
 
         if (this._respostas.length === 0)

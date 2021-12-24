@@ -212,6 +212,7 @@ export default class AlunoView extends View {
 
   reset(): void {
     this.mode = 'save';
+    this.page = 1;
     this.aluno = new Aluno();
     this.loadAlunos();
   }

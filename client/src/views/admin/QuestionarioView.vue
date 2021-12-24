@@ -9,7 +9,7 @@
 			<b-row>
 				<b-col md="3" sm="12">
 					<b-form-group label="Turma:" label-for="questionario-turma">
-						<b-form-select 
+						<b-form-select
 							id="questionario-turma"
 							v-model="questionario.turmaId"
 							:options="turmas"
@@ -49,9 +49,9 @@
 				</b-col>
 				<b-col md="3" sm="12">
 					<b-form-group label="Qtde Questões:" label-for="questionario-quantidade-questoes">
-						<b-form-spinbutton 
+						<b-form-spinbutton
 							id="questionario-quantidade-questoes"
-							min="1" 
+							min="1"
               max="100"
 							v-model="questionario.quantidadeQuestoes"
               :disabled="mode === 'remove'"
@@ -82,10 +82,10 @@
         {{ row.value | date }}
       </template>
 			<template #cell(actions)="data">
-				<b-button 
-          variant="info" 
+				<b-button
+          variant="info"
           class="mr-2"
-          v-b-tooltip.hover 
+          v-b-tooltip.hover
           title="Copiar link"
           @click="() => copyLink(`questionarios/${data.item.id}/quiz`)"
         >
@@ -99,7 +99,7 @@
 				</b-button>
 			</template>
 		</b-table>
-		<b-pagination 
+		<b-pagination
 			size="md"
 			class="mt-2"
 			v-model="page"
@@ -122,13 +122,13 @@ import Questionario from '@/models/questionario';
 		ContentAdmin
 	}
 })
-export default class QuestionarioView extends View { 
+export default class QuestionarioView extends View {
 	mode = 'save';
 
 	questionario: Questionario = new Questionario();
 	questionarios: Questionario[] = [];
   turmas: unknown[] = [];
-  
+
   fields: unknown[] = [
     { key: 'turma', label: 'Turma', sortable: true },
     { key: 'dataInicio', label: 'Início', sortable: true },
@@ -181,6 +181,7 @@ export default class QuestionarioView extends View {
 
   reset(): void {
     this.mode = 'save';
+    this.page = 1;
     this.questionario = new Questionario();
     this.loadQuestionarios();
   }
@@ -190,7 +191,7 @@ export default class QuestionarioView extends View {
     const id = this.questionario.id ? `/${this.questionario.id}` : '';
 
     try {
-      const questionario = { 
+      const questionario = {
         id: this.questionario.id,
         turmaId: this.questionario.turmaId,
         dataInicio: this.questionario.dataInicio,

@@ -1,7 +1,7 @@
 module.exports = app => {
     const { existsOrError, notExistsOrError } = app.assertions
 
-    const save = async (req, res) => {
+    const save = (req, res) => {
         const turma = { ...req.body }
         if (req.params.id) turma.id = req.params.id
 

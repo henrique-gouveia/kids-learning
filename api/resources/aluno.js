@@ -1,7 +1,7 @@
 module.exports = app => {
     const { existsOrError } = app.assertions
 
-    const save = async (req, res) => {
+    const save = (req, res) => {
         const aluno = { ...req.body }
         if (req.params.id) aluno.id = req.params.id
 
@@ -42,13 +42,13 @@ module.exports = app => {
         }
     }
 
-    const limit = 10
+    const limit = 5
 
     const get = async (req, res) => {
         const page = req.query.page || 1
 
         const result = await app.db('alunos').count('id').first()
-        const count = parseInt(result)
+        const count = parseInt(result.count)
 
         app.db({ a: 'alunos', t: 'turmas' })
             .select('a.id', { turmaId: 't.id' }, { turma: 't.nome' }, 'a.matricula', 'a.nome')

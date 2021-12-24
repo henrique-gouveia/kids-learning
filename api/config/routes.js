@@ -1,4 +1,7 @@
 module.exports = app => {
+    app.route('/')
+        .get((req, res) => res.send('Kids Learning Api is Running...'))
+
     app.route('/usuarios')
         .post(app.resources.usuario.save)
         .get(app.resources.usuario.get)
@@ -42,4 +45,10 @@ module.exports = app => {
         .get(app.resources.questionario.getById)
         .put(app.resources.questionario.save)
         .delete(app.resources.questionario.remove)
+
+    app.route('/arquivos')
+        .post(app.multer.single('file'), app.resources.arquivo.save)
+
+    app.route('/arquivos/:id')
+        .delete(app.resources.arquivo.remove)
 }

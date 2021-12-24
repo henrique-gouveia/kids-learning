@@ -45,32 +45,26 @@
             />
           </b-form-group>
 					<b-form-group
-            v-else-if="questao.tipo === 'Vocabulário'"
-            label="Imagem:"
-            label-for="questao-imagem-url"
+            v-else
+            :label="`${questao.tipo === 'Vocabulário' ? 'Imagem' : 'Audio'}`"
           >
-						<b-form-input
-							id="questao-imagem-url"
-							type="text"
-							placeholder="Informe o endereço da imagem da Questão (Opcional)..."
-							required
-							:readonly="mode == 'remove'"
-							v-model="questao.imagemUrl"
-						/>
-					</b-form-group>
-					<b-form-group
-            v-else-if="questao.tipo === 'Audição'"
-            label="Audio:"
-            label-for="questao-audio-url"
-          >
-						<b-form-input
-							id="questao-audio-url"
-							type="text"
-							placeholder="Informe o endereço para o audio da Questão..."
-							required
-							:readonly="mode === 'remove'"
-							v-model="questao.audioUrl"
-						/>
+            <VueFileAgent
+              ref="fileAgent"
+              :theme="'list'"
+              :multiple="false"
+              :deletable="mode === 'save'"
+              :accept="'image/*,audio/*'"
+              :maxSize="'10MB'"
+              :helpText="`Selecionar ${questao.tipo === 'Vocabulário' ? 'Imagem' : 'Audio'}`"
+              :errorText="{
+                type: `Tipo de arquivo inválido, apenas arquivos de ${questao.tipo === 'Vocabulário' ? 'Imagem' : 'Audio'} são permitidos.`,
+                size: 'Arquivo não pode exceder 10MB',
+              }"
+              v-model="arquivos"
+              @select="filesSelected($event)"
+              @beforedelete="beforeFileDelete($event)"
+              @delete="fileDeleted($event)"
+            />
 					</b-form-group>
 				</b-col>
 			</b-row>
@@ -125,11 +119,19 @@
 			</b-row>
 			<b-row>
 				<b-col xs="12">
-					<b-button variant="primary" v-if="mode === 'save'" @click="save">
+					<b-button variant="primary" v-if="mode === 'save'" @click="save" :disabled="loading">
 						Salvar
+            <template v-if="loading">
+              <b-spinner small type="grow" class="ml-1"></b-spinner>
+              <span class="sr-only ml-1">Salvando...</span>
+            </template>
 					</b-button>
-					<b-button variant="danger" v-if="mode === 'remove'" @click="remove">
+					<b-button variant="danger" v-if="mode === 'remove'" @click="remove" :disabled="loading">
 						Excluir
+            <template v-if="loading">
+              <b-spinner small type="grow" class="ml-1"></b-spinner>
+              <span class="sr-only ml-1">Excluindo...</span>
+            </template>
 					</b-button>
 					<b-button class="ml-2" @click="reset">
 						Cancelar
@@ -180,6 +182,7 @@ import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
 import View from '@/models/view';
+import Arquivo from '@/models/Arquivo';
 import Questao from '@/models/questao';
 
 @Component({
@@ -193,6 +196,10 @@ export default class QuestaoView extends View {
 
 	questao = new Questao();
 	questoes: Questao[] = [];
+
+  arquivos: any[] = [];
+  arquivoToSave: any = null;
+  arquivoToRemove: any = null;
 
 	tipos = [ 'Vocabulário', 'Leitura', 'Audição' ];
 
@@ -233,26 +240,48 @@ export default class QuestaoView extends View {
   async loadQuestao(questao: Questao, mode = 'save'): Promise<void> {
     this.mode = mode;
     try {
+      this.resetArquivo();
+
       const res = await api.get(`/questoes/${questao.id}`)
       this.questao = new Questao(res.data);
+
+      if (this.questao.arquivo)
+      {
+        const {
+          nomeOriginal: name,
+          tipo: type,
+          tamanho: size,
+          url
+        } = this.questao.arquivo;
+
+        this.arquivos = [{ name, size, type, url}];
+      }
     } catch (err) {
       this.showError(err);
     }
   }
 
   async save(): Promise<void> {
+    this.loading = true;
+
     const method = this.questao.id ? 'put' : 'post';
     const id = this.questao.id ? `/${this.questao.id}` : '';
 
     try {
+      let arquivo;
+
+      await this.removeArquivo();
+      const res = await this.saveArquivo();
+      if (res && res.data)
+        arquivo = new Arquivo(res.data);
+
       const questao = {
         id: this.questao.id,
+        arquivoId: this.arquivoToSave && arquivo && arquivo.id || !this.arquivoToRemove && this.questao.arquivoId,
         tipo: this.questao.tipo,
         enunciado: this.questao.enunciado,
         texto: this.questao.tipo === 'Leitura' ? this.questao.texto : null,
-        imagemUrl: this.questao.tipo === 'Vocabulário' ? this.questao.imagemUrl : null,
-        audioUrl: this.questao.tipo === 'Audição' ? this.questao.audioUrl : null,
-        respostas: this.questao.respostas
+        respostas: this.questao.respostas,
       };
 
       await api[method](`/questoes${id}`, { ...questao });
@@ -261,10 +290,29 @@ export default class QuestaoView extends View {
       this.reset();
     } catch (err) {
       this.showError(err);
+    } finally {
+      this.loading = false;
     }
   }
 
+  saveArquivo(): Promise<any> {
+    if (this.arquivoToSave) {
+      const formData = new FormData();
+      formData.append('file', this.arquivoToSave);
+
+      return api.post(`/arquivos`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+    }
+
+    return Promise.resolve();
+  }
+
   async remove(): Promise<void> {
+    this.loading = true;
+
     const id = this.questao.id;
     try {
       await api.delete(`/questoes/${id}`);
@@ -273,13 +321,46 @@ export default class QuestaoView extends View {
       this.reset();
     } catch (err) {
       this.showError(err);
+    } finally {
+      this.loading = false;
     }
+  }
+
+  removeArquivo(): Promise<any> {
+    if (this.arquivoToRemove) {
+      const arquivoId = this.questao.arquivoId;
+      return api.delete(`/arquivos/${arquivoId}`);
+    }
+
+    return Promise.resolve();
   }
 
   reset(): void {
     this.mode = 'save';
+    this.page = 1;
     this.questao = new Questao();
+    this.resetArquivo();
     this.loadQuestoes();
+  }
+
+  resetArquivo(): void {
+    this.arquivos = [];
+    this.arquivoToSave = null;
+    this.arquivoToRemove = null;
+  }
+
+  filesSelected(filesSelected: any): void {
+    const files = filesSelected.filter(f => !f.error);
+    this.arquivoToSave = files[0].file;
+  }
+
+  beforeFileDelete(file: any): void {
+    (this.$refs.fileAgent as any).deleteFileRecord(file);
+  }
+
+  fileDeleted(fileDeleted: any): void {
+    this.arquivoToSave = null;
+    this.arquivoToRemove = fileDeleted.file || fileDeleted;
   }
 
   @Watch('page')

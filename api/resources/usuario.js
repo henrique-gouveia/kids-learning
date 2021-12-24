@@ -21,7 +21,7 @@ module.exports = app => {
 
             const existentUser = await app.db('usuarios')
                 .where({ email: usuario.email }).first()
-            
+
             if (!usuario.id) {
                 notExistsOrError(existentUser, 'Usuário já cadastrado')
             }
@@ -48,13 +48,13 @@ module.exports = app => {
         }
     }
 
-    const limit = 10
+    const limit = 5
 
     const get = async (req, res) => {
         const page = req.query.page || 1
 
         const result = await app.db('usuarios').count('id').first()
-        const count = parseInt(result)
+        const count = parseInt(result.count)
 
         app.db('usuarios')
             .select('id', 'nome', 'email', 'admin')

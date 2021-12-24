@@ -33,7 +33,7 @@ module.exports = app => {
         const questaoId = await app.db('questoes').insert(questao).returning('id')
         await saveRespostas(questaoId[0], respostas)
     }
-    
+
     const updateQuestao = async (questao) => {
         const { respostas } = questao
         delete questao.respostas
@@ -54,10 +54,17 @@ module.exports = app => {
             const questaoId = req.params.id
             existsOrError(questaoId, 'Código da Questão não informada')
 
-            await app.db('questao_respostas').where({ questaoId }).del()
-            const rowsDeleted = await app.db('questoes').where({ id: questaoId }).del()
+            const questao = await app.db({ q: 'questoes' })
+                .leftJoin({ a: 'arquivos' }, 'q.arquivoId', 'a.id')
+                .select('q.id', 'q.arquivoId', { nomeArquivo: 'a.nome' })
+                .where({ 'q.id': questaoId })
+                .first()
+            existsOrError(questao, 'Questão não encontrada')
 
-            existsOrError(rowsDeleted, 'Questão não foi encontrada')
+            if (questao.nomeArquivo) await app.storage.del(questao.nomeArquivo)
+            await app.db('arquivos').where({ id: questao.arquivoId }).del()
+            await app.db('questao_respostas').where({ questaoId: questao.id }).del()
+            await app.db('questoes').where({ id: questao.id }).del()
 
             res.status(204).send()
         } catch (err) {
@@ -65,13 +72,13 @@ module.exports = app => {
         }
     }
 
-    const limit = 10
+    const limit = 5
 
     const get = async (req, res) => {
         const page = req.query.page || 1
 
         const result = await app.db('questoes').count('id').first()
-        const count = parseInt(result)
+        const count = parseInt(result.count)
 
         app.db('questoes')
             .select('id', 'tipo', 'enunciado')
@@ -83,11 +90,20 @@ module.exports = app => {
     const getById = async (req, res) => {
         try {
             const questao = await app.db('questoes')
-                .select('id', 'tipo', 'enunciado', 'texto', 'imagemUrl', 'audioUrl')
+                .select('id', 'arquivoId', 'tipo', 'enunciado', 'texto')
                 .where({ id: req.params.id })
-                .orderBy('id')
                 .first()
-                
+
+            if (questao.arquivoId)
+            {
+                const arquivo = await app.db('arquivos')
+                    .select('id', 'nomeOriginal', 'tipo', 'tamanho', 'url')
+                    .where({ id: questao.arquivoId })
+                    .first();
+
+                questao.arquivo = arquivo;
+            }
+
             const respostas = await app.db('questao_respostas')
                 .select('questaoId', 'alternativa', 'descricao', 'correta')
                 .where({ questaoId: questao.id })

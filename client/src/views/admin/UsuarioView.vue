@@ -9,25 +9,25 @@
       <b-row>
         <b-col md="6" sm="12">
           <b-form-group label="Nome:" label-for="usuario-nome">
-            <b-form-input 
-              id="usuario-nome" 
-              type="text" 
-              placeholder="Informe o nome do Usuário..." 
+            <b-form-input
+              id="usuario-nome"
+              type="text"
+              placeholder="Informe o nome do Usuário..."
               required
               :readonly="mode == 'remove'"
-              v-model="usuario.nome" 
+              v-model="usuario.nome"
             />
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12">
           <b-form-group label="E-mail:" label-for="usuario-email">
-            <b-form-input 
-              id="usuario-email" 
-              type="text" 
-              placeholder="Informe o E-mail do Usuário..." 
+            <b-form-input
+              id="usuario-email"
+              type="text"
+              placeholder="Informe o E-mail do Usuário..."
               required
               :readonly="mode == 'remove'"
-              v-model="usuario.email" 
+              v-model="usuario.email"
             />
           </b-form-group>
         </b-col>
@@ -38,23 +38,23 @@
       <b-row v-show="mode === 'save'">
         <b-col md="6" sm="12">
           <b-form-group label="Senha:" label-for="usuario-senha">
-            <b-form-input 
-              id="usuario-senha" 
+            <b-form-input
+              id="usuario-senha"
               type="password"
-              placeholder="Informe a Senha do Usuário..." 
+              placeholder="Informe a Senha do Usuário..."
               required
-              v-model="usuario.senha" 
+              v-model="usuario.senha"
             />
           </b-form-group>
         </b-col>
         <b-col md="6" sm="12">
           <b-form-group label="Confirmação de Senha:" label-for="usuario-confirm-senha">
-            <b-form-input 
-              id="usuario-confirm-senha" 
-              type="password" 
-              placeholder="Confirme a Senha do Usuário..." 
+            <b-form-input
+              id="usuario-confirm-senha"
+              type="password"
+              placeholder="Confirme a Senha do Usuário..."
               required
-              v-model="usuario.confirmSenha" 
+              v-model="usuario.confirmSenha"
             />
           </b-form-group>
         </b-col>
@@ -84,7 +84,7 @@
         </b-button>
       </template>
     </b-table>
-		<b-pagination 
+		<b-pagination
 			size="md"
 			class="mt-2"
 			v-model="page"
@@ -103,17 +103,17 @@ import ContentAdmin from './template/ContentAdmin.vue';
 		ContentAdmin
 	}
 })
-export default class UsuarioView extends Vue { 
+export default class UsuarioView extends Vue {
 	mode = 'save';
 
 	usuario = {};
 	usuarios = [];
-  
+
   public fields: unknown[] = [
     { key: 'id', label: 'Código', sortable: true },
     { key: 'nome', label: 'Nome', sortable: true },
     { key: 'email', label: 'E-mail', sortable: true },
-    { key: 'admin', label: 'Administrador', sortable: true, 
+    { key: 'admin', label: 'Administrador', sortable: true,
       formatter: (value: unknown) => value ? 'Sim' : 'Não' },
     { key: 'actions', label: 'Ações', class: 'd-flex' }
   ]
@@ -135,6 +135,7 @@ export default class UsuarioView extends Vue {
 
   public reset(): void {
     this.mode = 'save';
+    this.page = 1;
     this.usuario = {};
     this.loadUsuarios();
   }

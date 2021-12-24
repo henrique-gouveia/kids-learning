@@ -36,7 +36,7 @@ module.exports = app => {
         questionario.id = uuid.v4()
 
         const questoes = await raffleQuestoes(questionario.quantidadeQuestoes)
-        const questionarioQuestoes = questoes.map(q => ({ 
+        const questionarioQuestoes = questoes.map(q => ({
             questionarioId: questionario.id,
             questaoId: q.id
         }))
@@ -50,10 +50,10 @@ module.exports = app => {
 
         existsOrError(questoes, 'Não há questões cadastradas')
         greaterOrEqualThanOrError(questoes.length, count, `Não há questões suficiente, apenas ${questoes.length}`)
-        
+
         let maxCount = count
         if (questoes.length < count) maxCount = questoes.length
-        
+
         const raffle = () => {
             const idx = Math.floor(Math.random() * questoes.length);
             const questao = questoes[idx]
@@ -62,7 +62,7 @@ module.exports = app => {
 
             return questao
         }
-        
+
         const raffledQuestoes = [];
         for (let i = 0; i < maxCount; i++) {
             raffledQuestoes.push(raffle())
@@ -87,13 +87,13 @@ module.exports = app => {
         }
     }
 
-    const limit = 10
+    const limit = 5
 
     const get = async (req, res) => {
         const page = req.query.page || 1
 
         const result = await app.db('questionarios').count('id').first()
-        const count = parseInt(result)
+        const count = parseInt(result.count)
 
         app.db({ q: 'questionarios', t: 'turmas' })
             .select('q.id', { turmaId: 't.id' }, { turma: 't.nome' }, 'q.dataInicio', 'q.dataFim', 'q.quantidadeQuestoes')
