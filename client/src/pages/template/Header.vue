@@ -6,7 +6,7 @@
           <em :class="`fas fa-chevron-${isCollapsed ? 'right' : 'left'}`"></em>
         </a>
         <a href="" class="nav-link sidebar-toggle d-md-none" @click.prevent="toggleOffcanvas">
-          <em :class="`fas fa-chevron-${isCollapsed ? 'right' : 'left'}`"></em>
+          <em :class="`fas fa-chevron-${asideToggled ? 'left' : 'right'}`"></em>
         </a>
       </li>
     </ul>
@@ -33,6 +33,7 @@ import NavBar from '@/pages/template/NavBar.vue';
   }
 })
 export default class Header extends Vue {
+  @State((state: ApplicationState) => state.setting.asideToggled) asideToggled!: boolean;
   @State((state: ApplicationState) => state.setting.isCollapsed) isCollapsed!: boolean;
   @Mutation toggleSetting : any;
 
