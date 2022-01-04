@@ -12,10 +12,13 @@ module.exports = app => {
         const usuario = { ...req.body }
         if (req.params.id) usuario.id = req.params.id
 
+        if (!req.originalUrl.startsWith('/users')) usuario.admin = false
+        if (!req.user || !req.user.admin) usuario.admin = false
+
         try {
             existsOrError(usuario.nome, 'Nome não informado')
             existsOrError(usuario.email, 'E-mail não informado')
-            existsOrError(usuario.password, 'Senha não informado')
+            existsOrError(usuario.password, 'Senha não informada')
             existsOrError(usuario.confirmPassword, 'Confirmação de Senha inválida')
             equalsOrError(usuario.password, usuario.confirmPassword, 'Senhas não conferem')
 
@@ -34,17 +37,33 @@ module.exports = app => {
 
         if (usuario.id) {
             app.db('usuarios')
-                .update(user)
+                .update(usuario)
                 .where({ id: usuario.id })
+                .whereNull('deletedAt')
                 .then(_ => res.status(204).send())
                 .catch(err => res.status(500).send(err))
         } else {
             delete usuario.id
 
             app.db('usuarios')
-                .insert(user)
+                .insert(usuario)
                 .then(_ => res.status(204).send())
                 .catch(err => res.status(500).send(err))
+        }
+    }
+
+    const remove = async (req, res) => {
+        try {
+            existsOrError(req.params.id, 'Código do Usuário não informado')
+
+            const rowsUpdated = await app.db('usuarios')
+                .update({ deletedAt: new Date() })
+                .where({ id: req.params.id })
+            existsOrError(rowsUpdated, 'Usuário não foi encontrado')
+
+            res.status(204).send()
+        } catch (err) {
+            return res.status(400).send(err)
         }
     }
 
@@ -58,6 +77,7 @@ module.exports = app => {
 
         app.db('usuarios')
             .select('id', 'nome', 'email', 'admin')
+            .whereNull('deletedAt')
             .limit(limit).offset(page * limit - limit)
             .then(users => res.json({ data: users, count, limit }))
             .catch(err => res.status(500).send(err))
@@ -67,10 +87,11 @@ module.exports = app => {
         app.db('usuarios')
             .select('id', 'nome', 'email', 'admin')
             .where({ id: req.params.id })
+            .whereNull('deletedAt')
             .first()
             .then(user => res.json(user))
             .catch(err => res.status(500).send(err))
     }
 
-    return { save, get, getById }
+    return { save, remove, get, getById }
 }

@@ -12,6 +12,7 @@ app.multer = multer
 app.storage = storage
 
 consign()
+    .include('./config/passport.js')
     .then('./config/middlewares.js')
     .then('./assertions.js')
     .then('./resources')
