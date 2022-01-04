@@ -1,6 +1,5 @@
 import { MutationPayload, Store } from 'vuex';
 import { ApplicationState } from '../index';
-import { SettingState } from '../modules/setting';
 
 // Helpers to change class attribute
 const updateElementClass = (el: HTMLElement|null, stat: boolean, name: string) => el && el.classList[stat ? 'add' : 'remove'](name)

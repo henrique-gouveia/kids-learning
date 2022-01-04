@@ -40,7 +40,7 @@ const SettingModule = {
         hiddenFooter: false
     },
     getters: {
-        getSetting(state: SettingState) {
+        getSetting(state: SettingState): SettingState {
             return state;
         }
     },
@@ -48,8 +48,8 @@ const SettingModule = {
         /**
          * Toggle a setting value (only boolean)
          */
-        toggleSetting(state: SettingState, name: string) {
-            if(name in state)
+        toggleSetting(state: SettingState, name: string): void {
+            if (name in state)
                 state[name] = !state[name];
         },
         /**
@@ -57,8 +57,8 @@ const SettingModule = {
          * payload.name: name of the setting prop to change
          * payload.value: new value to apply
          */
-        changeSetting(state: SettingState, {name, value}: Setting) {
-            if(name in state)
+        changeSetting(state: SettingState, {name, value}: Setting): void {
+            if (name in state)
                 state[name] = value;
         }
     },

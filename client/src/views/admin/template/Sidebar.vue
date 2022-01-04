@@ -4,34 +4,38 @@
       <nav class="sidebar" data-sidebar-anyclick-close="">
         <ul class="sidebar-nav">
           <template v-for="item in Menu">
-            <li class="nav-heading" v-if="item.heading" :key="item.name">
-              <span>{{ item.heading }}</span>
-            </li>
-            <router-link tag="li" :to="item.path" active-class="active" v-if="!item.heading && !item.submenu" :key="item.name">
-              <a :title="item.name">
-                <span v-if="item.label" :class="'float-right badge badge-'+item.label.color">{{item.label.value}}</span>
-                <em :class="item.icon"></em>
-                <span>{{ item.name }}</span>
-              </a>
-            </router-link>
-            <li :class="routeActiveClass(getSubRoutes(item))" v-if="!item.heading && item.submenu" :key="item.name">
-              <a :title="item.name" @click.prevent="toggleItemCollapse(item.name)" href>
-                <span v-if="item.label" :class="'float-right badge badge-'+item.label.color">{{item.label.value}}</span>
-                <em :class="item.icon"></em>
-                <span>{{ item.name }}</span>
-              </a>
-              <b-collapse tag="ul" class="sidebar-nav sidebar-subnav" id="item.name" v-model="collapse[item.name]">
-                <li class="sidebar-subnav-header">{{item.name}}</li>
-                <template v-for="sitem in item.submenu">
-                  <router-link tag="li" :to="sitem.path" active-class="active" :key="sitem.name">
-                      <a :title="sitem.name">
-                        <span v-if="sitem.label" :class="'float-right badge badge-'+sitem.label.color">{{sitem.label.value}}</span>
-                        <span>{{ sitem.name }}</span>
-                      </a>
-                  </router-link>
-                </template>
-              </b-collapse>
-            </li>
+            <template v-if="!item.requiresAdmin || item.requiresAdmin && userAdmin">
+              <li class="nav-heading" v-if="item.heading" :key="item.name">
+                <span>{{ item.heading }}</span>
+              </li>
+              <router-link tag="li" :to="item.path" active-class="active" v-if="!item.heading && !item.submenu" :key="item.name">
+                <a :title="item.name">
+                  <span v-if="item.label" :class="'float-right badge badge-'+item.label.color">{{item.label.value}}</span>
+                  <em :class="item.icon"></em>
+                  <span>{{ item.name }}</span>
+                </a>
+              </router-link>
+              <li :class="routeActiveClass(getSubRoutes(item))" v-if="!item.heading && item.submenu" :key="item.name">
+                <a :title="item.name" @click.prevent="toggleItemCollapse(item.name)" href>
+                  <span v-if="item.label" :class="'float-right badge badge-'+item.label.color">{{item.label.value}}</span>
+                  <em :class="item.icon"></em>
+                  <span>{{ item.name }}</span>
+                </a>
+                <b-collapse tag="ul" class="sidebar-nav sidebar-subnav" id="item.name" v-model="collapse[item.name]">
+                  <li class="sidebar-subnav-header">{{item.name}}</li>
+                  <template v-for="sitem in item.submenu">
+                    <template v-if="!sitem.requiresAdmin || sitem.requiresAdmin && userAdmin">
+                      <router-link tag="li" :to="sitem.path" active-class="active" :key="sitem.name">
+                          <a :title="sitem.name">
+                            <span v-if="sitem.label" :class="'float-right badge badge-'+sitem.label.color">{{sitem.label.value}}</span>
+                            <span>{{ sitem.name }}</span>
+                          </a>
+                      </router-link>
+                    </template>
+                  </template>
+                </b-collapse>
+              </li>
+            </template>
           </template>
         </ul>
       </nav>
@@ -57,6 +61,7 @@ export default class Sidebar extends Vue {
   Menu = Menu;
   collapse: StringBoolArray = {} as StringBoolArray
 
+  @State((state: ApplicationState) => state.auth.admin) userAdmin!: boolean;
   @State((state: ApplicationState) => state.setting.showUserBlock) showUserBlock!: boolean;
 
   mounted(): void {

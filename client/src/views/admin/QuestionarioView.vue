@@ -1,6 +1,6 @@
 <template>
 	<ContentAdmin
-		icon="icon-note"
+		icon="icon-layers"
 		title="Administração"
 		subtitle="Questionário"
 	>
@@ -74,7 +74,24 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table responsive hover striped :fields="fields" :items="questionarios">
+		<b-table
+      responsive
+      hover
+      striped
+      show-empty
+      :fields="fields"
+      :items="questionarios"
+      :busy="loading"
+    >
+      <template #table-busy>
+        <div class="text-center my-1">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong class="align-middle ml-2">Carregando...</strong>
+        </div>
+      </template>
+      <template #empty class="text-center">
+        <p class="text-center">Nenhum questionário encontrado</p>
+      </template>
       <template #cell(dataInicio)="row">
         {{ row.value | date }}
       </template>
@@ -124,6 +141,7 @@ import Questionario from '@/models/questionario';
 })
 export default class QuestionarioView extends View {
 	mode = 'save';
+  loading = false;
 
 	questionario: Questionario = new Questionario();
 	questionarios: Questionario[] = [];
@@ -147,6 +165,7 @@ export default class QuestionarioView extends View {
   }
 
   async loadQuestionarios(): Promise<void> {
+    this.loading = true;
     try {
       const res = await api.get(`/questionarios?page=${this.page}`);
       if (res && res.data) {
@@ -159,10 +178,12 @@ export default class QuestionarioView extends View {
     } catch (err) {
       this.showError(err);
       this.questionarios = [];
+    } finally {
+      this.loading = false;
     }
   }
 
-  loadQuestionario(questionario, mode = 'save'): void {
+  loadQuestionario(questionario: Questionario, mode = 'save'): void {
     this.mode = mode;
     this.questionario = questionario;
   }

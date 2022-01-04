@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 import './config/vendor';
 import './config/filters'
@@ -7,9 +7,9 @@ import './config/vue-editor';
 import './config/vue-file-agent';
 import './config/vue-toasted';
 
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import App from './App.vue';
+import router from './router';
+import store from './store';
 
 Vue.config.productionTip = false
 

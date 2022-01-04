@@ -57,9 +57,10 @@ export default class Header extends Vue {
     this.toggleSetting('isCollapsed')
     this.resize();
   }
-  
+
   signout(): void {
-    // Do something...
+    this.$store.commit('setAuthData', null);
+    this.$router.push({ path: 'auth' });
   }
 }
 </script>

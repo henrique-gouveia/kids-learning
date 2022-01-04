@@ -4,7 +4,8 @@
     <Sidebar />
     <section class="section-container">
         <!-- Page content -->
-        <router-view />
+        <Loading v-if="validatingToken"/>
+        <router-view v-else />
     </section>
     <Footer />
   </div>
@@ -12,16 +13,22 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import Header from '../../template/Header.vue';
+import { State } from 'vuex-class';
+import { ApplicationState } from '@/store/index';
+import Loading from '@/components/Loading.vue';
 import Sidebar from './Sidebar.vue'
+import Header from '../../template/Header.vue';
 import Footer from '../../template/Footer.vue';
 
 @Component({
   components: {
     Header,
     Sidebar,
-    Footer
+    Footer,
+    Loading
   }
 })
-export default class Layout extends Vue {}
+export default class Layout extends Vue {
+  @State((state: ApplicationState) => state.auth.validatingToken) validatingToken!: boolean;
+}
 </script>
