@@ -44,11 +44,11 @@
 <script lang="ts">
 import { Component } from 'vue-property-decorator';
 import api from '@/services/api';
-import View from '@/models/view';
+import VuePage from '@/models/vuePage';
 import Usuario from '@/models/usuario';
 
 @Component
-export default class Auth extends View {
+export default class AuthPage extends VuePage {
   showSignup = false
   usuario: Usuario = new Usuario();
 

@@ -1,7 +1,7 @@
 <template>
   <ContentWrapper>
     <b-container fluid>
-      <ContentHeader 
+      <ContentHeader
         :icon="icon"
         :main="title"
         :sub="subtitle"
@@ -19,16 +19,16 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import ContentWrapper from '@/views/template/ContentWrapper.vue'
+import ContentWrapper from '@/pages/template/ContentWrapper.vue'
 import ContentHeader from './ContentHeader.vue'
 
 @Component({
-  components: { 
+  components: {
 		ContentHeader,
     ContentWrapper
 	}
 })
-export default class ContentAdmin extends Vue { 
+export default class ContentAdmin extends Vue {
 	@Prop({ default: "" }) public icon!: string;
   @Prop({ default: "" }) public title!: string;
   @Prop({ default: "" }) public subtitle!: string;

@@ -4,9 +4,9 @@
       <b-col cols="12" class="accordion" role="tablist">
         <b-card class="mb-1">
           <b-card-header header-tag="header" class="p-1" role="tab">
-            <b-button 
-              block 
-              v-b-toggle.ask-accordion 
+            <b-button
+              block
+              v-b-toggle.ask-accordion
               variant="purple"
               class="text-left"
             >
@@ -15,17 +15,17 @@
           </b-card-header>
           <b-collapse id="ask-accordion" visible accordion="ask-accordion" role="tabpanel">
 
-            <img 
-              class="img-fluid mt-2" 
-              v-if="currentQuestao.imageUrl" 
-              :src="currentQuestao.imageUrl" 
-              alt="Imagem" 
+            <img
+              class="img-fluid mt-2"
+              v-if="currentQuestao.imageUrl"
+              :src="currentQuestao.imageUrl"
+              alt="Imagem"
               width="120"
             />
 
-            <audio 
-              class="mt-2" 
-              controls 
+            <audio
+              class="mt-2"
+              controls
               v-if="currentQuestao.audioUrl"
             >
               <source src="@/assets/audios/fruits.mp3" type="audio/mpeg">
@@ -38,14 +38,14 @@
                 v-for="resposta in currentQuestao.respostas"
                 :key="resposta.id"
               >
-                <b-row 
+                <b-row
                   no-gutters
                   style="cursor: pointer"
                   @click="() => selectAnswer(resposta)"
                   :class="getAnswerBackgroundColor(resposta)"
                 >
-                  <b-col 
-                    md="1" 
+                  <b-col
+                    md="1"
                     class="d-flex justify-content-center align-items-center"
                     :class="!resposta.selecionada ? 'bg-gray' : ''"
                   >
@@ -77,14 +77,14 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
-import Footer from '@/views/template/Footer.vue';
-import NavBar from '@/views/template/NavBar.vue';
+import Footer from '@/pages/template/Footer.vue';
+import NavBar from '@/pages/template/NavBar.vue';
 import { questoes } from '@/data';
 
 @Component({
-  components: { 
-    NavBar, 
-    Footer 
+  components: {
+    NavBar,
+    Footer
   }
 })
 export default class Quiz extends Vue {

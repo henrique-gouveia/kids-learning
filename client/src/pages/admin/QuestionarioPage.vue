@@ -130,7 +130,7 @@
 import { Component } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
-import View from '@/models/view'
+import VuePage from '@/models/vuePage'
 import Turma from '@/models/turma';
 import Questionario from '@/models/questionario';
 
@@ -139,7 +139,7 @@ import Questionario from '@/models/questionario';
 		ContentAdmin
 	}
 })
-export default class QuestionarioView extends View {
+export default class QuestionarioPage extends VuePage {
 	mode = 'save';
   loading = false;
 

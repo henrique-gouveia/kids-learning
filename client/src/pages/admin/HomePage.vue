@@ -4,7 +4,7 @@
 			<ContentHeader icon="icon-home" main="Início" sub="Estastísticas" />
 			<b-row>
 				<b-col xl="3" lg="6">
-					<InfoCard 
+					<InfoCard
 						icon="fas fa-boxes"
 						variant="primary"
 						description="Turmas"
@@ -13,7 +13,7 @@
 					/>
 				</b-col>
 				<b-col xl="3" lg="6">
-					<InfoCard 
+					<InfoCard
 						icon="fas fa-users"
 						variant="green"
 						description="Alunos"
@@ -22,7 +22,7 @@
 					/>
 				</b-col>
 				<b-col xl="3" lg="6">
-					<InfoCard 
+					<InfoCard
 						icon="fas fa-book"
 						variant="danger"
 						description="Questões"
@@ -31,7 +31,7 @@
 					/>
 				</b-col>
 				<b-col xl="3" lg="6">
-					<InfoCard 
+					<InfoCard
 						icon="fas fa-clipboard-list"
 						variant="warning"
 						description="Questionários"
@@ -47,7 +47,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import InfoCard from '@/components/InfoCard.vue';
-import ContentWrapper from '@/views/template/ContentWrapper.vue'
+import ContentWrapper from '@/pages/template/ContentWrapper.vue'
 import ContentHeader from "./template/ContentHeader.vue";
 
 @Component({

@@ -102,7 +102,7 @@
 import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
-import View from '@/models/view';
+import VuePage from '@/models/vuePage';
 import Turma from '@/models/turma';
 import Aluno from '@/models/aluno';
 
@@ -111,7 +111,7 @@ import Aluno from '@/models/aluno';
 		ContentAdmin
 	}
 })
-export default class AlunoView extends View {
+export default class AlunoPage extends VuePage {
 	mode = 'save';
   loading = false;
 

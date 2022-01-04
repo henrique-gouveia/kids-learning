@@ -1,4 +1,4 @@
-import Arquivo from "./Arquivo";
+import Arquivo from "./arquivo";
 import QuestaoReposta from "./questaoReposta";
 
 export default class Questao {

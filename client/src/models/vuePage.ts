@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-export default class View extends Vue {
+export default class VuePage extends Vue {
     protected showSuccess(message: string | null = ''): void {
         this.$toasted.global.showSuccess({ message });
     }

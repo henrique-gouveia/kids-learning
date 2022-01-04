@@ -69,7 +69,7 @@
 import { Component } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
-import View from '@/models/view';
+import VuePage from '@/models/vuePage';
 import Turma from '@/models/turma';
 
 @Component({
@@ -77,7 +77,7 @@ import Turma from '@/models/turma';
 		ContentAdmin
 	}
 })
-export default class TurmaView extends View {
+export default class TurmaPage extends VuePage {
 	mode = 'save';
   loading = false;
 

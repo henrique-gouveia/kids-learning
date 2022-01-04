@@ -181,8 +181,8 @@
 import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
-import View from '@/models/view';
-import Arquivo from '@/models/Arquivo';
+import VuePage from '@/models/vuePage';
+import Arquivo from '@/models/arquivo';
 import Questao from '@/models/questao';
 
 @Component({
@@ -190,7 +190,7 @@ import Questao from '@/models/questao';
     ContentAdmin
 	}
 })
-export default class QuestaoView extends View {
+export default class QuestaoPage extends VuePage {
 	mode = 'save';
   loading = false;
 

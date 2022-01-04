@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import NavBar from '@/views/template/NavBar.vue';
+import NavBar from '@/pages/template/NavBar.vue';
 import Footer from '../../template/Footer.vue';
 
 @Component({

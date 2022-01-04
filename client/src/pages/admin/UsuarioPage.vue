@@ -115,7 +115,7 @@
 import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
-import View from '@/models/view';
+import VuePage from '@/models/vuePage';
 import Usuario from '@/models/usuario';
 
 @Component({
@@ -123,7 +123,7 @@ import Usuario from '@/models/usuario';
 		ContentAdmin
 	}
 })
-export default class UsuarioView extends View {
+export default class UsuarioPage extends VuePage {
 	mode = 'save';
   loading = false;
 

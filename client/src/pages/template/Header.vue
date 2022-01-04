@@ -25,7 +25,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Mutation, State } from 'vuex-class';
 import { ApplicationState } from '@/store/index';
-import NavBar from '@/views/template/NavBar.vue';
+import NavBar from '@/pages/template/NavBar.vue';
 
 @Component({
   components: {

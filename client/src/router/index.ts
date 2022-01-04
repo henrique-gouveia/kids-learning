@@ -3,20 +3,20 @@ import VueRouter, { RouteConfig } from 'vue-router';
 import { appKey } from '@/consts';
 
 // Layouts
-import AdminLayout from '@/views/admin/template/Layout.vue';
-import PublicLayout from '@/views/public/template/Layout.vue';
+import AdminLayout from '@/pages/admin/template/Layout.vue';
+import PublicLayout from '@/pages/public/template/Layout.vue';
 
 // Views
-const Home = () => import('@/views/admin/HomeView.vue');
+const Home = () => import('@/pages/admin/HomePage.vue');
 
-const Turma = () => import('@/views/admin/TurmaView.vue');
-const Aluno = () => import('@/views/admin/AlunoView.vue');
-const Questao = () => import('@/views/admin/QuestaoView.vue');
-const Questionario = () => import('@/views/admin/QuestionarioView.vue');
-const Usuario = () => import('@/views/admin/UsuarioView.vue');
+const Turma = () => import('@/pages/admin/TurmaPage.vue');
+const Aluno = () => import('@/pages/admin/AlunoPage.vue');
+const Questao = () => import('@/pages/admin/QuestaoPage.vue');
+const Questionario = () => import('@/pages/admin/QuestionarioPage.vue');
+const Usuario = () => import('@/pages/admin/UsuarioPage.vue');
 
-const Auth = () => import('@/views/public/AuthView.vue')
-const Quiz = () => import('@/views/public/Quiz.vue');
+const Auth = () => import('@/pages/public/AuthPage.vue')
+const Quiz = () => import('@/pages/public/QuizPage.vue');
 
 Vue.use(VueRouter);
 
