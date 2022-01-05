@@ -12,7 +12,7 @@ module.exports = app => {
         const usuario = { ...req.body }
         if (req.params.id) usuario.id = req.params.id
 
-        if (!req.originalUrl.startsWith('/users')) usuario.admin = false
+        if (!req.originalUrl.startsWith('/usuarios')) usuario.admin = false
         if (!req.user || !req.user.admin) usuario.admin = false
 
         try {
