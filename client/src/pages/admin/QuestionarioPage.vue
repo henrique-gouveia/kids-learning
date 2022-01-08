@@ -127,7 +127,7 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
 import api from '@/services/api';
 import VuePage from '@/models/vuePage'
@@ -244,6 +244,11 @@ export default class QuestionarioPage extends VuePage {
   copyLink(path: string): void {
     navigator.clipboard.writeText(`${window.location.origin}/${path}`);
     this.showSuccess('Copiado!');
+  }
+
+  @Watch('page')
+  onChangePage(): void {
+    this.loadQuestionarios();
   }
 }
 </script>
