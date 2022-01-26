@@ -1,5 +1,9 @@
 <template>
-  <AdminLayout icon="icon-note" title="Questionário" subtitle="Relatório">
+  <ContentAdmin
+    icon="icon-note"
+		title="Relatório"
+		subtitle="Questionário"
+  >
     <div class="content-heading">
       <div>
         Vue Chart JS
@@ -33,7 +37,7 @@
         <div class="col-lg-6">
           <h3 class="mb-3 py-2">Polar Area Chart</h3>
           <div>
-            <PolarChart 
+            <PolarChart
 							:height="250"
 							:data="polar.data"
               :options="polar.options"
@@ -43,8 +47,8 @@
         <div class="col-lg-6">
           <h3 class="mb-3 py-2">Radar Chart</h3>
           <div>
-            <RadarChart 
-							:height="250" 
+            <RadarChart
+							:height="250"
 							:data="radar.data"
               :options="radar.options"
 						/>
@@ -55,17 +59,17 @@
         <div class="col-lg-6">
           <h3 class="mb-3 py-2">Pie Chart</h3>
           <div>
-            <PieChart 							
-							:height="250" 
+            <PieChart
+							:height="250"
 							:data="pie.data"
-              :options="pie.options" 
+              :options="pie.options"
 						/>
           </div>
         </div>
         <div class="col-lg-6">
           <h3 class="mb-3 py-2">Doughnut Chart</h3>
           <div>
-            <DoughnutChart 
+            <DoughnutChart
 							:height="250"
 							:data="doughnut.data"
               :options="doughnut.options"
@@ -74,7 +78,7 @@
         </div>
       </div>
     </b-container>
-  </AdminLayout>
+  </ContentAdmin>
 </template>
 
 <script lang="ts">
@@ -87,13 +91,13 @@ import PieChart from "@/components/charts/PieChart.vue";
 import PolarChart from "@/components/charts/PolarChart.vue";
 import RadarChart from "@/components/charts/RadarChart.vue";
 
-import AdminLayout from "./AdminLayout.vue";
+import ContentAdmin from './template/ContentAdmin.vue';
 
 import { Line, Bar, Doughnut, Pie, Polar, Radar } from "@/ChartJS.setup";
 
 @Component({
   components: {
-    AdminLayout,
+    ContentAdmin,
     LineChart,
     BarChart,
     DoughnutChart,
@@ -102,7 +106,7 @@ import { Line, Bar, Doughnut, Pie, Polar, Radar } from "@/ChartJS.setup";
     RadarChart,
   },
 })
-export default class QuestionarioReport extends Vue {
+export default class QuestionarioReportPage extends Vue {
   line = Line;
   bar = Bar;
   doughnut = Doughnut;

@@ -47,6 +47,16 @@ const Menu: ISidebarMenu = [
             }
         ]
     },
+    {
+        name: 'Relatórios',
+        icon: 'icon-note',
+        submenu: [
+            {
+                name: 'Questionários',
+                path: 'questionarios/localizar'
+            },
+        ]
+    },
 ];
 
 export default Menu;

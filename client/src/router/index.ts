@@ -13,6 +13,9 @@ const Turma = () => import('@/pages/admin/TurmaPage.vue');
 const Aluno = () => import('@/pages/admin/AlunoPage.vue');
 const Questao = () => import('@/pages/admin/QuestaoPage.vue');
 const Questionario = () => import('@/pages/admin/QuestionarioPage.vue');
+const QuestionarioSearch = () => import('@/pages/admin/QuestionarioSearchPage.vue');
+const QuestionarioReport = () => import('@/pages/admin/QuestionarioReportPage.vue');
+
 const Usuario = () => import('@/pages/admin/UsuarioPage.vue');
 
 const Auth = () => import('@/pages/public/AuthPage.vue')
@@ -45,6 +48,14 @@ const routes: Array<RouteConfig> = [
             {
                 path: '/questionarios',
                 component: Questionario
+            },
+            {
+                path: '/questionarios/localizar',
+                component: QuestionarioSearch,
+            },
+            {
+                path: '/questionarios/:id/relatorio',
+                component: QuestionarioReport,
             },
             {
                 path: '/usuarios',

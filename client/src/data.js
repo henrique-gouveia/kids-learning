@@ -1,23 +1,43 @@
 export const turmas = [
 	{
 		id: 1,
-		nome: 'Turma A',
+		nome: 'Turma 1',
 	},
+	{
+		id: 2,
+		nome: 'Turma 2',
+	},
+	{
+		id: 3,
+		nome: 'Turma 3',
+	}
 ];
 
 export const alunos = [
 	{
 		id: 1,
 		matricula: 123,
-		turma: 'Turma A',
+		turma: 'Turma 1',
 		nome: 'Aluno 1',
 	},
+	{
+		id: 2,
+		matricula: 456,
+		turma: 'Turma 2',
+		nome: 'Aluno 2',
+	},
+	{
+		id: 3,
+		matricula: 789,
+		turma: 'Turma 3',
+		nome: 'Aluno 3',
+	}
 ]
 
 export const questoes = [
 	{
 		id: 1,
-		tipo: 'Vocabulário',
+		tipo: 'Textual',
 		enunciado: "Como se escreve o número 1?",
 		respostas: [
 			{
@@ -40,7 +60,53 @@ export const questoes = [
 		]
 	}, {
 		id: 2,
-		tipo: 'Vocabulário',
+		tipo: 'Textual',
+		enunciado: "Como se diz são 9 horas?",
+		respostas: [
+			{
+				id: 4,
+				descricao: "It's nine o'clock",
+				alternativa: "A",
+				selecionada: false,
+				correta: true
+			}, {
+				id: 5,
+				descricao: "It's ten past nine",
+				alternativa: "B",
+				selecionada: false,
+			}, {
+				id: 6,
+				descricao: "It's eleven o'clock",
+				alternativa: "C",
+				selecionada: false,
+			}
+		]
+	}, {
+		id: 3,
+		tipo: 'Textual',
+		enunciado: "Como se diz mamão?",
+		respostas: [
+			{
+				id: 7,
+				descricao: "Strawberry",
+				alternativa: "A",
+				selecionada: false,
+			}, {
+				id: 8,
+				descricao: "Watermelon",
+				alternativa: "B",
+				selecionada: false,
+			}, {
+				id: 9,
+				descricao: "Papaya",
+				alternativa: "C",
+				selecionada: false,
+				correta: true
+			}
+		]
+	}, {
+		id: 4,
+		tipo: 'Visual',
 		enunciado: "Qual automóvel você vê na imagem?",
 		imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNCLifzLr7b-ju6NU8rr9RC-lorLjwtnPn4A&usqp=CAU",
 		respostas: [
@@ -63,8 +129,8 @@ export const questoes = [
 			}
 		]
 	}, {
-		id: 3,
-		tipo: 'Audição',
+		id: 5,
+		tipo: 'Auditiva',
 		enunciado: "Qual alternativa possui somente frutas citadas no audio?",
 		audioUrl: "@/assets/audios/fruits.mp3",
 		respostas: [
