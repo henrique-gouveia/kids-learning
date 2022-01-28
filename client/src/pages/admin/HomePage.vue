@@ -8,7 +8,8 @@
 						icon="fas fa-boxes"
 						variant="primary"
 						description="Turmas"
-						value="3"
+            :loading="loading"
+						:value="estatistica.turmas"
 						link="/turmas"
 					/>
 				</b-col>
@@ -17,7 +18,8 @@
 						icon="fas fa-users"
 						variant="green"
 						description="Alunos"
-						value="3"
+            :loading="loading"
+						:value="estatistica.alunos"
 						link="/alunos"
 					/>
 				</b-col>
@@ -26,7 +28,8 @@
 						icon="fas fa-book"
 						variant="danger"
 						description="Questões"
-						value="5"
+            :loading="loading"
+						:value="estatistica.questoes"
 						link="/questoes"
 					/>
 				</b-col>
@@ -35,7 +38,8 @@
 						icon="fas fa-clipboard-list"
 						variant="warning"
 						description="Questionários"
-						value="3"
+            :loading="loading"
+						:value="estatistica.questionarios"
 						link="/questionarios"
 					/>
 				</b-col>
@@ -45,10 +49,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component } from "vue-property-decorator";
 import InfoCard from '@/components/InfoCard.vue';
 import ContentWrapper from '@/pages/template/ContentWrapper.vue'
 import ContentHeader from "./template/ContentHeader.vue";
+import api from '@/services/api';
+import VuePage from '@/models/vuePage';
+import Estatistica from '@/models/estatistica';
 
 @Component({
   components: {
@@ -57,7 +64,28 @@ import ContentHeader from "./template/ContentHeader.vue";
 		InfoCard
   },
 })
-export default class HomeView extends Vue {}
+export default class HomeView extends VuePage {
+  loading = false;
+  estatistica = new Estatistica();
+
+  mounted(): void {
+    this.loadEstatisticas();
+  }
+
+  async loadEstatisticas(): Promise<void> {
+    this.loading = true;
+    try {
+      const res = await api.get(`/estatisticas`);
+      if (res && res.data) {
+        this.estatistica = new Estatistica(res.data);
+      }
+    } catch (err) {
+      this.showError(err);
+    } finally {
+      this.loading = false;
+    }
+  }
+}
 </script>
 
 <style lang="scss">

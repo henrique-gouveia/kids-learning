@@ -281,7 +281,12 @@ export default class QuestaoPage extends VuePage {
         tipo: this.questao.tipo,
         enunciado: this.questao.enunciado,
         texto: this.questao.tipo === 'Leitura' ? this.questao.texto : null,
-        respostas: this.questao.respostas,
+        respostas: this.questao.respostas.map(r => ({
+          questaoId: r.questaoId,
+          alternativa: r.alternativa,
+          descricao: r.descricao,
+          correta: r.correta
+        })),
       };
 
       await api[method](`/questoes${id}`, { ...questao });

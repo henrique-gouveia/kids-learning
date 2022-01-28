@@ -10,39 +10,46 @@
               variant="purple"
               class="text-left"
             >
-              {{ currentQuestao.enunciado }}
+              {{ questao.enunciado }}
             </b-button>
           </b-card-header>
           <b-collapse id="ask-accordion" visible accordion="ask-accordion" role="tabpanel">
+            <div class="quiz-content">
+              <img
+                class="img-fluid mt-2"
+                alt="Imagem"
+                width="120"
+                v-if="questao.tipo === 'Vocabulário' && questao.arquivo && questao.arquivo.url"
+                :src="questao.arquivo.url"
+              />
 
-            <img
-              class="img-fluid mt-2"
-              v-if="currentQuestao.imageUrl"
-              :src="currentQuestao.imageUrl"
-              alt="Imagem"
-              width="120"
-            />
+              <audio
+                controls
+                class="mt-2"
+                v-if="questao.tipo === 'Audição' && questao.arquivo && questao.arquivo.url"
+              >
+                <source :src="questao.arquivo.url" :type="questao.arquivo.tipo">
+                Seu browser não suporta o player de audio.
+              </audio>
 
-            <audio
-              class="mt-2"
-              controls
-              v-if="currentQuestao.audioUrl"
-            >
-              <source src="@/assets/audios/fruits.mp3" type="audio/mpeg">
-              Seu browser não suporta o player de audio.
-            </audio>
+              <div
+                class="quiz-text"
+                v-if="questao.texto"
+                v-html="questao.texto"
+              ></div>
+            </div>
 
             <b-card-body>
               <b-card
                 no-body
-                v-for="resposta in currentQuestao.respostas"
+                v-for="resposta in questao.respostas"
                 :key="resposta.id"
               >
                 <b-row
                   no-gutters
                   style="cursor: pointer"
                   @click="() => selectAnswer(resposta)"
-                  :class="getAnswerBackgroundColor(resposta)"
+                  :class="getAnswerCardColor(resposta)"
                 >
                   <b-col
                     md="1"
@@ -76,10 +83,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator';
+import { Component, Watch } from 'vue-property-decorator';
 import Footer from '@/pages/template/Footer.vue';
 import NavBar from '@/pages/template/NavBar.vue';
-import { questoes } from '@/data';
+import api from '@/services/api';
+import VuePage from '@/models/vuePage';
+import Questao from '@/models/questao';
+import QuestaoResposta from '@/models/questaoReposta';
 
 @Component({
   components: {
@@ -87,11 +97,29 @@ import { questoes } from '@/data';
     Footer
   }
 })
-export default class Quiz extends Vue {
-  questoes = questoes
+export default class Quiz extends VuePage {
 
   currentPage = 0;
-  currentQuestao = this.questoes[this.currentPage];
+  questao = new Questao();
+  questoes: Questao[] =  [];
+
+  mounted(): void {
+    const { id: questionarioId } = this.$route.params;
+    this.loadQuestoes(questionarioId);
+  }
+
+  async loadQuestoes(questionarioId: string): Promise<void> {
+    try {
+      const res = await api.get(`/questionarios/${questionarioId}/questoes`);
+      if (res && res.data) {
+        this.questoes = res.data.map((a: unknown) => new Questao(a));
+        this.questao = this.questoes[this.currentPage];
+      }
+    } catch (err) {
+      this.showError(err);
+      this.questoes = [];
+    }
+  }
 
   get isFirstPage(): boolean {
     return this.currentPage == 0;
@@ -101,7 +129,7 @@ export default class Quiz extends Vue {
     return this.currentPage == this.questoes.length - 1;
   }
 
-  getAnswerBackgroundColor(resposta): string {
+  getAnswerCardColor(resposta: QuestaoResposta): string {
     if (resposta.selecionada) {
       return resposta.correta ? 'bg-success' : 'bg-danger';
     }
@@ -121,19 +149,19 @@ export default class Quiz extends Vue {
       this.currentPage = nextPage;
   }
 
-  selectAnswer(resposta): void {
+  selectAnswer(resposta: QuestaoResposta): void {
     if (!this.hasAnswerSelected())
       resposta.selecionada = true;
   }
 
   hasAnswerSelected(): boolean {
-    const respostasSelected = this.currentQuestao.respostas.filter(a => a.selecionada == true) || [];
+    const respostasSelected = this.questao.respostas.filter(a => a.selecionada == true) || [];
     return respostasSelected.length > 0;
   }
 
   @Watch('currentPage')
   onChangeCurrentPage(): void {
-    this.currentQuestao = this.questoes[this.currentPage];
+    this.questao = this.questoes[this.currentPage];
   }
 }
 </script>
@@ -141,5 +169,30 @@ export default class Quiz extends Vue {
 <style lang="scss">
 .quiz-wrapper {
   padding-top: 10px;
+
+  .quiz-content {
+    padding: 10px;
+  }
+
+  .quiz-text {
+    background-color: #fff;
+    border-radius: 8px;
+
+    pre {
+      padding: 30px;
+      border-radius: 8px;
+      font-size: 1.2rem;
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 </style>

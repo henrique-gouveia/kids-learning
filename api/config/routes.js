@@ -7,6 +7,10 @@ module.exports = app => {
     app.post('/signin', app.resources.auth.signin)
     app.post('/validateToken', app.resources.auth.validateToken)
 
+    app.route('/estatisticas')
+        .all(app.config.passport.authenticate())
+        .get(app.resources.stats.get)
+
     app.route('/usuarios')
         .all(app.config.passport.authenticate())
         .post(admin(app.resources.usuario.save))
@@ -61,6 +65,8 @@ module.exports = app => {
         .get(app.resources.questionario.getById)
         .put(app.resources.questionario.save)
         .delete(app.resources.questionario.remove)
+
+    app.get('/questionarios/:id/questoes', app.resources.questionario.getQuestionsByQuestionnaireId)
 
     app.route('/arquivos')
         .all(app.config.passport.authenticate())

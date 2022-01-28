@@ -27,7 +27,7 @@ export default class Questao {
         this.enunciado = data.enunciado || '';
         this.texto = data.texto;
 
-        this._respostas = data.respostas || [];
+        this._respostas = (data.respostas || []).map(r => new QuestaoReposta(r));
 
         if (this._respostas.length === 0)
             this._respostas = [ new QuestaoReposta({ correta: true } )];

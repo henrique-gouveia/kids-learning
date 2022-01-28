@@ -3,6 +3,7 @@ export default class QuestaoReposta {
     public alternativa!: number;
     public descricao!: string;
     public correta!: boolean;
+    public selecionada!: boolean;
 
     constructor(data: any = {}) {
         if (!data) {
@@ -11,7 +12,8 @@ export default class QuestaoReposta {
 
         this.questaoId = data.questaoId || 0;
         this.alternativa = data.alternativa || 1;
-        this.descricao = data.nome || '';
+        this.descricao = data.descricao || '';
         this.correta = data.correta || false;
+        this.selecionada = false;
     }
 }

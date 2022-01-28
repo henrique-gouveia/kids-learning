@@ -7,12 +7,16 @@
 		<b-form>
 			<b-row>
 				<b-col md="4" sm="12">
-					<b-form-group label="Turma:" label-for="questionario-turma">
+          <b-form-group label="Turma:" label-for="questionario-turma">
 						<b-form-select
 							id="questionario-turma"
 							v-model="questionario.turmaId"
 							:options="turmas"
-						/>
+						>
+              <template #first>
+                <b-form-select-option :value="0" disabled>Selecione a turma...</b-form-select-option>
+              </template>
+            </b-form-select>
 					</b-form-group>
 				</b-col>
 				<b-col md="4" sm="12">
@@ -20,6 +24,9 @@
 						<b-form-datepicker
 							id="questionario-inicio"
 							required
+              :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+              lang="pt-BR"
+              :hide-header="true"
 							v-model="questionario.dataInicio"
 						/>
 					</b-form-group>
@@ -29,6 +36,9 @@
 						<b-form-datepicker
 							id="questionario-fim"
 							required
+              :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
+              lang="pt-BR"
+              :hide-header="true"
 							v-model="questionario.dataFim"
 						/>
 					</b-form-group>
@@ -48,7 +58,30 @@
 				</b-col>
 			</b-row>
 		</b-form>
-		<b-table hover striped :fields="fields" :items="questionarios">
+		<b-table
+      responsive
+      hover
+      striped
+      show-empty
+      :fields="fields"
+      :items="questionarios"
+      :busy="loading"
+    >
+      <template #table-busy>
+        <div class="text-center my-1">
+          <b-spinner class="align-middle"></b-spinner>
+          <strong class="align-middle ml-2">Carregando...</strong>
+        </div>
+      </template>
+      <template #empty class="text-center">
+        <p class="text-center">Nenhum questionário encontrado</p>
+      </template>
+      <template #cell(dataInicio)="row">
+        {{ row.value | date }}
+      </template>
+      <template #cell(dataFim)="row">
+        {{ row.value | date }}
+      </template>
 			<template #cell(actions)="data">
 				<router-link
 					class="btn btn-green"
@@ -69,40 +102,77 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component } from 'vue-property-decorator';
 import ContentAdmin from './template/ContentAdmin.vue';
-import { questionarios } from '@/data';
+import api from '@/services/api';
+import VuePage from '@/models/vuePage'
+import Turma from '@/models/turma';
+import Questionario from '@/models/questionario';
 
 @Component({
   components: {
 		ContentAdmin
 	}
 })
-export default class QuestionarioSearchPage extends Vue {
+export default class QuestionarioSearchPage extends VuePage {
+  loading = false;
 
-	questionario = {};
-	questionarios = questionarios;
-
-	turmas = [ 'Turma 1', 'Turma 2', 'Turma 3' ];
+	questionario: Questionario = new Questionario();
+	questionarios: Questionario[] = [];
+  turmas: unknown[] = [];
 
   public fields: unknown[] = [
     { key: 'turma', label: 'Turma', sortable: true },
-    { key: 'inicio', label: 'Início', sortable: true },
-    { key: 'fim', label: 'Fim', sortable: true },
+    { key: 'dataInicio', label: 'Início', sortable: true },
+    { key: 'dataFim', label: 'Fim', sortable: true },
     { key: 'actions', label: 'Ações' }
 	];
 
-  public page = 1;
-  public limit = 0;
-  public count = 0;
+  page = 1;
+  limit = 0;
+  count = 0;
 
-	public reset(): void {
-    this.questionario = {};
+  mounted(): void {
+    this.loadTurmas();
+    this.loadQuestionarios();
   }
 
-  public async find(): Promise<void> {}
+  async loadQuestionarios(): Promise<void> {
+    this.loading = true;
+    try {
+      const res = await api.get(`/questionarios?page=${this.page}`);
+      if (res && res.data) {
+        const { data, count, limit } = res.data;
 
-  public async remove(): Promise<void> {}
+        this.questionarios = data.map((a: unknown) => new Questionario(a));
+        this.count = count;
+        this.limit = limit;
+      }
+    } catch (err) {
+      this.showError(err);
+      this.questionarios = [];
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async loadTurmas(): Promise<void> {
+    try {
+      const res = await api.get(`/turmas`);
+      if (res && res.data) {
+        this.turmas = res.data.map((t: Turma) => ({ value: t.id, text: t.nome }));
+      }
+    } catch (err) {
+      this.showError(err);
+      this.turmas = [];
+    }
+  }
+
+	public reset(): void {
+    this.page = 1;
+    this.questionario = new Questionario();
+    this.loadQuestionarios();
+  }
 }
 </script>
 

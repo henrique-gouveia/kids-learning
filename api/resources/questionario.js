@@ -116,5 +116,61 @@ module.exports = app => {
         }
     }
 
-    return { save, remove, get, getById }
+    const getQuestionsByQuestionnaireId = async (req, res) => {
+        try {
+            const questionarioId = req.params.id
+            existsOrError(questionarioId, 'Código do questionário não informado')
+
+            let questoes = await app.db({ qq: 'questionario_questoes' })
+                .innerJoin({ q: 'questoes' }, 'qq.questaoId', 'q.id')
+                .leftJoin({ a: 'arquivos' }, 'q.arquivoId', 'a.id')
+                .select(
+                    'qq.questionarioId', 'q.id', 'q.tipo', 'q.enunciado', 'q.texto', 'q.arquivoId',
+                    {
+                        arquivoNomeOriginal: 'a.nomeOriginal',
+                        arquivoNome: 'a.nome',
+                        arquivoTipo: 'a.tipo',
+                        arquivoTamanho: 'a.tamanho',
+                        arquivoUrl: 'a.url'
+                    })
+                .where({ 'qq.questionarioId': questionarioId })
+            existsOrError(questoes, 'Não foram econtradas questões para esse questionário')
+
+            questoes = await Promise.all(questoes.map(async (q) => {
+                const respostas = await app.db('questao_respostas')
+                    .select('questaoId', 'alternativa', 'descricao', 'correta')
+                    .where({ questaoId: q.id })
+
+                let arquivo = null
+                if (q.arquivoId) {
+                    arquivo = {
+                        arquivoId: q.arquivoId,
+                        nomeOriginal: q.arquivoNomeOriginal,
+                        nome: q.arquivoNome,
+                        tipo: q.arquivoTipo,
+                        tamanho: q.arquivoTamanho,
+                        url: q.arquivoUrl
+                    }
+                }
+
+                return {
+                    questionarioId: q.questionarioId,
+                    id: q.id,
+                    tipo: q.tipo,
+                    enunciado: q.enunciado,
+                    texto: (q.texto || '').toString(),
+                    arquivo,
+                    respostas
+                }
+            }))
+
+            console.log(questoes)
+
+            res.json(questoes)
+        } catch (err) {
+            return res.status(400).send(err)
+        }
+    }
+
+    return { save, remove, get, getById, getQuestionsByQuestionnaireId }
 }

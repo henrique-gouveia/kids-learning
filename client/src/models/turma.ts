@@ -10,4 +10,11 @@ export default class Turma {
         this.id = data.id || 0;
         this.nome = data.nome || '';
     }
+
+    public toObject() {
+        return {
+            id: this.id,
+            nome: this.nome
+        }
+    }
 }

@@ -1,6 +1,6 @@
 export default class Aluno {
     public id!: number;
-    
+
     public turmaId!: number;
     private _turma?: string;
 

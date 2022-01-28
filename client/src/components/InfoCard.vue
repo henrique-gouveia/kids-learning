@@ -6,7 +6,8 @@
 					<em :class="`fa ${icon} fa-5x`"></em>
 				</b-col>
 				<b-col cols="9" class="text-right">
-					<div class="text-lg">{{ value }}</div>
+          <b-spinner v-if="loading" label="Loading..." />
+					<div v-else class="text-lg">{{ value }}</div>
 					<p class="m-0">{{ description }}</p>
 				</b-col>
 			</b-row>
@@ -29,11 +30,12 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component({})
 export default class InfoCard extends Vue {
-	@Prop({ default: "primary" }) public variant!: string;
-	@Prop({ default: "" }) public icon!: string;
-	@Prop({ default: "" }) public description!: string;
-	@Prop({ default: 0 }) public value!: number;
-	@Prop({ default: "#" }) public link!: string;
+  @Prop({ default: false }) loading!: boolean;
+	@Prop({ default: "primary" }) variant!: string;
+	@Prop({ default: "" }) icon!: string;
+	@Prop({ default: "" }) description!: string;
+	@Prop({ default: 0 }) value!: number;
+	@Prop({ default: "#" }) link!: string;
 
 }
 </script>

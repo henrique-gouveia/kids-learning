@@ -79,6 +79,10 @@ const routes: Array<RouteConfig> = [
             }
         ]
     },
+    // {
+    //     path: '/questionarios/:id/quiz',
+    //     component: Quiz,
+    // },
     // Not found route
     {
         path: '*',
