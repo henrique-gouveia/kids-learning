@@ -8,6 +8,7 @@ export default class Questao {
     public tipo!: string;
     public enunciado!: string;
     public texto?: string;
+    private _acertou!: boolean;
 
     private _respostas: Resposta[] = [];
 
@@ -26,11 +27,16 @@ export default class Questao {
         this.tipo = data.tipo || 'Vocabulário';
         this.enunciado = data.enunciado || '';
         this.texto = data.texto;
+        this._acertou = false;
 
         this._respostas = (data.respostas || []).map(r => new Resposta(r));
 
         if (this._respostas.length === 0)
             this._respostas = [ new Resposta({ correta: true } )];
+    }
+
+    public get acertou(): boolean {
+        return this._acertou;
     }
 
     public get alternativaCorreta(): number {
@@ -57,8 +63,13 @@ export default class Questao {
         if (!this.haRespostaSelecionada()) {
             this._respostas = this._respostas.map(resposta => {
                 const selecionada = resposta.alternativa === alternativa;
+
                 const revelar = selecionada || resposta.correta;
                 if (revelar) resposta.revelar();
+
+                if (selecionada && resposta.correta)
+                    this._acertou = true;
+
                 return resposta;
             })
         }

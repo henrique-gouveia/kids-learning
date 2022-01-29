@@ -20,6 +20,7 @@ const Usuario = () => import('@/pages/admin/UsuarioPage.vue');
 
 const Auth = () => import('@/pages/public/AuthPage.vue')
 const Quiz = () => import('@/pages/public/QuizPage.vue');
+const QuizResults = () => import('@/pages/public/QuizResutsPage.vue');
 
 Vue.use(VueRouter);
 
@@ -78,6 +79,10 @@ const routes: Array<RouteConfig> = [
     {
         path: '/questionarios/:id/quiz',
         component: Quiz,
+    },
+    {
+        path: '/questionarios/:id/quiz/resultado',
+        component: QuizResults,
     },
     // Not found route
     {

@@ -4,7 +4,7 @@
 			<ContentHeader icon="icon-home" main="Início" sub="Estastísticas" />
 			<b-row>
 				<b-col xl="3" lg="6">
-					<InfoCard
+					<LinkableCard
 						icon="fas fa-boxes"
 						variant="primary"
 						description="Turmas"
@@ -14,7 +14,7 @@
 					/>
 				</b-col>
 				<b-col xl="3" lg="6">
-					<InfoCard
+					<LinkableCard
 						icon="fas fa-users"
 						variant="green"
 						description="Alunos"
@@ -24,7 +24,7 @@
 					/>
 				</b-col>
 				<b-col xl="3" lg="6">
-					<InfoCard
+					<LinkableCard
 						icon="fas fa-book"
 						variant="danger"
 						description="Questões"
@@ -34,7 +34,7 @@
 					/>
 				</b-col>
 				<b-col xl="3" lg="6">
-					<InfoCard
+					<LinkableCard
 						icon="fas fa-clipboard-list"
 						variant="warning"
 						description="Questionários"
@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import { Component } from "vue-property-decorator";
-import InfoCard from '@/components/InfoCard.vue';
+import LinkableCard from '@/components/LinkableCard.vue';
 import ContentWrapper from '@/pages/template/ContentWrapper.vue'
 import ContentHeader from "./template/ContentHeader.vue";
 import api from '@/services/api';
@@ -61,7 +61,7 @@ import Estatistica from '@/models/estatistica';
   components: {
     ContentHeader,
 		ContentWrapper,
-		InfoCard
+		LinkableCard
   },
 })
 export default class HomeView extends VuePage {

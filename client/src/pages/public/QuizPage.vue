@@ -67,17 +67,18 @@
         pill
         size="lg"
         variant="green"
-        class="quiz-button"
+        class="btn-quiz"
         v-if="isLastPage"
         :disabled="!questao.haRespostaSelecionada()"
+        @click="finalize"
       >
-        Confirmar {{ pagelabel }}
+        Finalizar {{ pagelabel }}
       </b-button>
       <b-button
         pill
         size="lg"
         variant="purple"
-        class="quiz-button"
+        class="btn-quiz"
         @click="next"
         v-else
         :disabled="!questao.haRespostaSelecionada()"
@@ -90,20 +91,14 @@
 
 <script lang="ts">
 import { Component, Watch } from 'vue-property-decorator';
-import Footer from '@/pages/template/Footer.vue';
-import NavBar from '@/pages/template/NavBar.vue';
 import api from '@/services/api';
 import VuePage from '@/models/vuePage';
 import Questao from '@/models/questao';
 
-@Component({
-  components: {
-    NavBar,
-    Footer
-  }
-})
+@Component
 export default class QuizPage extends VuePage {
 
+  questionarioId = '';
   currentPage = 0;
   questao = new Questao();
   questoes: Questao[] =  [];
@@ -114,6 +109,7 @@ export default class QuizPage extends VuePage {
   }
 
   async loadQuestoes(questionarioId: string): Promise<void> {
+    this.questionarioId = questionarioId;
     try {
       const res = await api.get(`/questionarios/${questionarioId}/questoes`);
       if (res && res.data) {
@@ -148,6 +144,13 @@ export default class QuizPage extends VuePage {
     const nextPage = this.currentPage + 1;
     if (nextPage < this.questoes.length)
       this.currentPage = nextPage;
+  }
+
+  finalize(): void {
+    const total = this.questoes.length;
+    const certas = this.questoes.filter(q => q.acertou).length;
+
+    this.$router.replace(`quiz/resultado?total=${total}&certas=${certas}`);
   }
 
   @Watch('currentPage')
@@ -291,13 +294,13 @@ body {
       }
     }
 
-    .quiz-button {
+    .btn-quiz {
       font-size: 1.0rem;
       font-weight: 400;
       transition: all .2s ease-in-out;
 
       &:hover {
-        transform: scale(1.1);
+          transform: scale(1.1);
       }
     }
   }

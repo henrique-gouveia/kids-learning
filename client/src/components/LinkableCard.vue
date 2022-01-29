@@ -29,7 +29,7 @@
 import { Component, Vue, Prop } from "vue-property-decorator";
 
 @Component({})
-export default class InfoCard extends Vue {
+export default class LinkableCard extends Vue {
   @Prop({ default: false }) loading!: boolean;
 	@Prop({ default: "primary" }) variant!: string;
 	@Prop({ default: "" }) icon!: string;
