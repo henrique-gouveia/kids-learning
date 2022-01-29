@@ -1,34 +1,32 @@
 <template>
   <b-container>
-    <div class="quiz-results-wrapper">
-      <div class="quiz-results__title m-3">
-        <h1>Resultado:</h1>
-      </div>
-      <SimpleCard
-        variant="info"
-        icon="icon-list"
-        :value="total"
-        description="Total de questões"
-      />
-      <SimpleCard
-        variant="success"
-        icon="icon-check"
-        :value="acertos"
-        description="Acertos"
-      />
-      <SimpleCard
-        variant="danger"
-        icon="icon-close"
-        :value="erros"
-        description="Erros"
-      />
-      <SimpleCard
-        variant="warning"
-        icon="icon-trophy"
-        :value="`${percentual}%`"
-        description="Aproveitamento"
-      />
+    <div class="quiz-results__title m-3">
+      <h1>Resultado:</h1>
     </div>
+    <SimpleCard
+      variant="info"
+      icon="icon-list"
+      :value="total"
+      description="Total de questões"
+    />
+    <SimpleCard
+      variant="success"
+      icon="icon-check"
+      :value="acertos"
+      description="Acertos"
+    />
+    <SimpleCard
+      variant="danger"
+      icon="icon-close"
+      :value="erros"
+      description="Erros"
+    />
+    <SimpleCard
+      variant="warning"
+      icon="icon-trophy"
+      :value="`${percentual}%`"
+      description="Aproveitamento"
+    />
   </b-container>
 </template>
 
@@ -61,19 +59,4 @@ export default class QuizResultPage extends Vue {
 </script>
 
 <style lang="scss">
-html,
-body {
-  padding: 0;
-  margin: 0;
-  background-color: #6c5fb4;
-  color: #fff;
-
-  .quiz-results-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-}
 </style>

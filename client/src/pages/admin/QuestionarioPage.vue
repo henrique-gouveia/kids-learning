@@ -104,7 +104,7 @@
           class="mr-2"
           v-b-tooltip.hover
           title="Copiar link"
-          @click="() => copyLink(`questionarios/${data.item.id}/quiz`)"
+          @click="() => copyLink(`quiz/${data.item.id}`)"
         >
 					<i class="far fa-copy"></i>
 				</b-button>

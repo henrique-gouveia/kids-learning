@@ -6,6 +6,8 @@ import { appKey } from '@/consts';
 import AdminLayout from '@/pages/admin/template/Layout.vue';
 import PublicLayout from '@/pages/public/template/Layout.vue';
 
+const QuizLayout = () => import('@/pages/public/template/QuizLayout.vue');
+
 // Views
 const Home = () => import('@/pages/admin/HomePage.vue');
 
@@ -77,12 +79,18 @@ const routes: Array<RouteConfig> = [
         ]
     },
     {
-        path: '/questionarios/:id/quiz',
-        component: Quiz,
-    },
-    {
-        path: '/questionarios/:id/quiz/resultado',
-        component: QuizResults,
+        path: '/',
+        component: QuizLayout,
+        children: [
+            {
+                path: '/quiz/:id',
+                component: Quiz
+            },
+            {
+                path: '/quiz/:id/resultado',
+                component: QuizResults,
+            },
+        ]
     },
     // Not found route
     {
