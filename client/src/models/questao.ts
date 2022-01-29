@@ -1,5 +1,5 @@
 import Arquivo from "./arquivo";
-import QuestaoReposta from "./questaoReposta";
+import Resposta from "./resposta";
 
 export default class Questao {
     public id!: number;
@@ -9,7 +9,7 @@ export default class Questao {
     public enunciado!: string;
     public texto?: string;
 
-    private _respostas: QuestaoReposta[] = [];
+    private _respostas: Resposta[] = [];
 
     constructor(data: any = {}) {
         if (!data) {
@@ -27,10 +27,10 @@ export default class Questao {
         this.enunciado = data.enunciado || '';
         this.texto = data.texto;
 
-        this._respostas = (data.respostas || []).map(r => new QuestaoReposta(r));
+        this._respostas = (data.respostas || []).map(r => new Resposta(r));
 
         if (this._respostas.length === 0)
-            this._respostas = [ new QuestaoReposta({ correta: true } )];
+            this._respostas = [ new Resposta({ correta: true } )];
     }
 
     public get alternativaCorreta(): number {
@@ -39,21 +39,45 @@ export default class Questao {
     }
 
     public set alternativaCorreta(value: number) {
-        this._respostas = this._respostas.map(r => ({ ...r, correta: r.alternativa == value }));
+        this._respostas = this._respostas.map(r => new Resposta({ ...r, correta: r.alternativa == value }));
     }
 
-    public get respostas(): QuestaoReposta[] {
+    public get respostas(): Resposta[] {
         return this._respostas;
     }
 
-    public AddResposta(): void {
+    public addResposta(): void {
         const alternativas = this._respostas.map(r => r.alternativa);
         const alternativa = alternativas.reduce((a, b) => Math.max(a, b)) + 1;
 
-        this._respostas.push(new QuestaoReposta({ questaoId: this.id, alternativa }));
+        this._respostas.push(new Resposta({ questaoId: this.id, alternativa }));
     }
 
-    public removeReposta(alternativa: number): void {
+    public selecionarResposta(alternativa: number): void {
+        if (!this.haRespostaSelecionada()) {
+            this._respostas = this._respostas.map(resposta => {
+                const selecionada = resposta.alternativa === alternativa;
+                const revelar = selecionada || resposta.correta;
+                if (revelar) resposta.revelar();
+                return resposta;
+            })
+        }
+    }
+
+    public haRespostaSelecionada(): boolean {
+        const respostasSelecionadas = this._respostas.filter(a => a.revelada == true) || [];
+        return respostasSelecionadas.length > 0;
+    }
+
+    public haImagem(): boolean {
+        return (this.tipo === 'Vocabulário' && !!this.arquivo?.url);
+    }
+
+    public haVideo(): boolean {
+        return (this.tipo === 'Audição' && !!this.arquivo?.url);
+    }
+
+    public removerReposta(alternativa: number): void {
         if (this._respostas.length > 1)
             this._respostas = this._respostas.filter(r => r.alternativa !== alternativa);
     }

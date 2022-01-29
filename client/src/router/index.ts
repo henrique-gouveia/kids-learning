@@ -73,16 +73,12 @@ const routes: Array<RouteConfig> = [
                 path: '/auth',
                 component: Auth
             },
-            {
-                path: '/questionarios/:id/quiz',
-                component: Quiz,
-            }
         ]
     },
-    // {
-    //     path: '/questionarios/:id/quiz',
-    //     component: Quiz,
-    // },
+    {
+        path: '/questionarios/:id/quiz',
+        component: Quiz,
+    },
     // Not found route
     {
         path: '*',

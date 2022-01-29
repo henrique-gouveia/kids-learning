@@ -104,10 +104,10 @@
 									/>
 
 									<b-input-group-append class="input-group-append-md">
-										<b-button variant="success" class=" ml-1 mr-1" @click="() => questao.AddResposta()">
+										<b-button variant="success" class=" ml-1 mr-1" @click="() => questao.addResposta()">
 											<em class="fa fa-plus"></em>
 										</b-button>
-										<b-button variant="danger" @click="() => questao.removeReposta(resposta.alternativa)">
+										<b-button variant="danger" @click="() => questao.removerReposta(resposta.alternativa)">
 											<em class="fa fa-trash"></em>
 										</b-button>
 									</b-input-group-append>

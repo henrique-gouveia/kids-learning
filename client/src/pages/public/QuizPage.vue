@@ -1,85 +1,91 @@
 <template>
-  <b-container>
-    <b-row class="quiz-wrapper">
-      <b-col cols="12" class="accordion" role="tablist">
-        <b-card class="mb-1">
-          <b-card-header header-tag="header" class="p-1" role="tab">
-            <b-button
-              block
-              v-b-toggle.ask-accordion
-              variant="purple"
-              class="text-left"
-            >
-              {{ questao.enunciado }}
-            </b-button>
-          </b-card-header>
-          <b-collapse id="ask-accordion" visible accordion="ask-accordion" role="tabpanel">
-            <div class="quiz-content">
-              <img
-                class="img-fluid mt-2"
-                alt="Imagem"
-                width="120"
-                v-if="questao.tipo === 'Vocabulário' && questao.arquivo && questao.arquivo.url"
-                :src="questao.arquivo.url"
-              />
-
-              <audio
-                controls
-                class="mt-2"
-                v-if="questao.tipo === 'Audição' && questao.arquivo && questao.arquivo.url"
-              >
-                <source :src="questao.arquivo.url" :type="questao.arquivo.tipo">
-                Seu browser não suporta o player de audio.
-              </audio>
-
-              <div
-                class="quiz-text"
-                v-if="questao.texto"
-                v-html="questao.texto"
-              ></div>
+  <div class="quiz-wrapper" :style="questao.texto ? '' : 'height: 100vh'">
+    <div class="quiz-question">
+      <div class="quiz-question__title">
+        {{ questao.enunciado }}
+      </div>
+      <div class="quiz-question__complement">
+        <img
+          class="img-fluid mt-2"
+          alt="Imagem"
+          width="120"
+          v-if="questao.haImagem()"
+          :src="questao.arquivo.url"
+        />
+        <audio
+          controls
+          class="mt-2"
+          v-if="questao.haVideo()"
+        >
+          <source :src="questao.arquivo.url" :type="questao.arquivo.tipo">
+          Seu browser não suporta o player de audio.
+        </audio>
+        <div
+          class="ql-editor"
+          v-if="questao.texto"
+          v-html="questao.texto"
+        />
+      </div>
+      <div
+        class="quiz-question__answers"
+        v-for="resposta in questao.respostas"
+        :key="`${questao.id}-${resposta.alternativa}`"
+      >
+        <div
+          class="quiz-question__answers-container"
+          :class="{ 'quiz-question__answers-container--revealed': resposta.revelada }">
+          <div
+            class="quiz-question__answer-front"
+            v-if="!resposta.revelada"
+            @click="() => questao.selecionarResposta(resposta.alternativa)"
+          >
+            <div class="quiz-question__answer-option" :style="`background-color: ${resposta.alternativaCor}`">
+              {{ resposta.alternativa }}
             </div>
-
-            <b-card-body>
-              <b-card
-                no-body
-                v-for="resposta in questao.respostas"
-                :key="resposta.id"
-              >
-                <b-row
-                  no-gutters
-                  style="cursor: pointer"
-                  @click="() => selectAnswer(resposta)"
-                  :class="getAnswerCardColor(resposta)"
-                >
-                  <b-col
-                    md="1"
-                    class="d-flex justify-content-center align-items-center"
-                    :class="!resposta.selecionada ? 'bg-gray' : ''"
-                  >
-                    <b-card-text>
-                      <span v-if="!hasAnswerSelected()">{{ resposta.alternativa }}</span>
-                      <em v-else-if="resposta.selecionada" :class="`fa-2x icon-${resposta.correta ? 'check' : 'close'}`"></em>
-                      <span v-else>{{ resposta.alternativa }}</span>
-                    </b-card-text>
-                  </b-col>
-                  <b-col md="11">
-                    <b-card-body>
-                      <b-card-text>{{ resposta.descricao }}</b-card-text>
-                    </b-card-body>
-                  </b-col>
-                </b-row>
-              </b-card>
-            </b-card-body>
-          </b-collapse>
-          <div class="m-1">
-            <b-button @click="previous" class="mr-1" v-if="!isFirstPage">Anterior</b-button>
-            <b-button variant="purple" @click="next" v-if="!isLastPage">Próxima</b-button>
-            <b-button variant="success" v-if="isLastPage">Confirmar</b-button>
+            <div class="quiz-question__answer-title">
+              {{ resposta.descricao }}
+            </div>
           </div>
-        </b-card>
-      </b-col>
-    </b-row>
-  </b-container>
+          <div
+            class="quiz-question__answer-back"
+            v-else
+          >
+            <div class="quiz-question__answer--right" v-if="resposta.correta">
+              <div>A resposta certa é...</div>
+              <div class="quiz-question__answer-title">{{ resposta.descricao }}</div>
+            </div>
+            <div class="quiz-question__answer--wrong" v-else>
+              <div>A resposta informada está errada...</div>
+              <div class="quiz-question__answer-title">{{ resposta.descricao }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="m-3">
+      <b-button
+        pill
+        size="lg"
+        variant="green"
+        class="quiz-button"
+        v-if="isLastPage"
+        :disabled="!questao.haRespostaSelecionada()"
+      >
+        Confirmar {{ pagelabel }}
+      </b-button>
+      <b-button
+        pill
+        size="lg"
+        variant="purple"
+        class="quiz-button"
+        @click="next"
+        v-else
+        :disabled="!questao.haRespostaSelecionada()"
+      >
+        Próxima {{ pagelabel }}
+      </b-button>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -89,7 +95,6 @@ import NavBar from '@/pages/template/NavBar.vue';
 import api from '@/services/api';
 import VuePage from '@/models/vuePage';
 import Questao from '@/models/questao';
-import QuestaoResposta from '@/models/questaoReposta';
 
 @Component({
   components: {
@@ -97,7 +102,7 @@ import QuestaoResposta from '@/models/questaoReposta';
     Footer
   }
 })
-export default class Quiz extends VuePage {
+export default class QuizPage extends VuePage {
 
   currentPage = 0;
   questao = new Questao();
@@ -129,12 +134,8 @@ export default class Quiz extends VuePage {
     return this.currentPage == this.questoes.length - 1;
   }
 
-  getAnswerCardColor(resposta: QuestaoResposta): string {
-    if (resposta.selecionada) {
-      return resposta.correta ? 'bg-success' : 'bg-danger';
-    }
-
-    return '';
+  get pagelabel(): string {
+    return `${this.currentPage + 1} / ${this.questoes.length}`
   }
 
   previous(): void {
@@ -149,16 +150,6 @@ export default class Quiz extends VuePage {
       this.currentPage = nextPage;
   }
 
-  selectAnswer(resposta: QuestaoResposta): void {
-    if (!this.hasAnswerSelected())
-      resposta.selecionada = true;
-  }
-
-  hasAnswerSelected(): boolean {
-    const respostasSelected = this.questao.respostas.filter(a => a.selecionada == true) || [];
-    return respostasSelected.length > 0;
-  }
-
   @Watch('currentPage')
   onChangeCurrentPage(): void {
     this.questao = this.questoes[this.currentPage];
@@ -167,31 +158,147 @@ export default class Quiz extends VuePage {
 </script>
 
 <style lang="scss">
-.quiz-wrapper {
-  padding-top: 10px;
+@import '~quill/dist/quill.core.css';
 
-  .quiz-content {
-    padding: 10px;
-  }
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #43397f;
+  color: #fff;
 
-  .quiz-text {
-    background-color: #fff;
-    border-radius: 8px;
+  .quiz-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // height: 100vh;
 
-    pre {
-      padding: 30px;
-      border-radius: 8px;
-      font-size: 1.2rem;
-      background-color: #1e1e1e;
-      color: #fff;
+    .quiz-question {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+
+      .quiz-question__title {
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      .quiz-question__complement {
+        background-color: #6c5fb4;
+        padding: 15px;
+        border-radius: 12px;
+        margin: 15px;
+
+        & p {
+          font-size: 1.0rem;
+        }
+
+        & pre {
+          padding: 30px;
+          border-radius: 8px;
+          font-size: 1.2rem;
+          background-color: #1e1e1e;
+          color: #fff;
+        }
+
+        & img {
+          max-width: 100%;
+        }
+
+        & :last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .quiz-question__answers {
+        display: flex;
+        width: 80%;
+        min-width: 300px;
+        height: 80px;
+        margin: 15px;
+        cursor: pointer;
+
+        .quiz-question__answers-container {
+          position: relative;
+          display: flex;
+          flex: 1;
+          transition: transform 0.8s;
+          transform-style: preserve-3d;
+
+          .quiz-question__answer-front, .quiz-question__answer-back {
+            position: absolute;
+            display: flex;
+            height: 100%;
+            width: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+          }
+
+          .quiz-question__answer-front {
+            align-items: center;
+            border-radius: 12px;
+            padding: 15px;
+            color: #000;
+            background-color: #fff;
+          }
+
+          .quiz-question__answer-back  {
+            transform: rotateY(180deg);
+          }
+
+          .quiz-question__answer-back > div {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+          }
+
+          .quiz-question__answer-option {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+            height: 40px;
+            width: 40px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #fff;
+            background-color: #F2C866;
+          }
+
+          .quiz-question__answer-title {
+            font-size: 1.2rem;
+            font-weight: 400;
+          }
+
+          .quiz-question__answer--right {
+            background-color: #37bc9b;
+          }
+
+          .quiz-question__answer--wrong {
+            background-color: #f05050;
+          }
+        }
+
+        .quiz-question__answers-container--revealed {
+          transform: rotateY(180deg);
+        }
+      }
     }
 
-    img {
-      max-width: 100%;
-    }
+    .quiz-button {
+      font-size: 1.0rem;
+      font-weight: 400;
+      transition: all .2s ease-in-out;
 
-    :last-child {
-      margin-bottom: 0;
+      &:hover {
+        transform: scale(1.1);
+      }
     }
   }
 }

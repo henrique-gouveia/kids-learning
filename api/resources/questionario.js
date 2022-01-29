@@ -164,8 +164,6 @@ module.exports = app => {
                 }
             }))
 
-            console.log(questoes)
-
             res.json(questoes)
         } catch (err) {
             return res.status(400).send(err)
