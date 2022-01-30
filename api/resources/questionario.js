@@ -1,7 +1,7 @@
 const uuid = require('uuid')
 
 module.exports = app => {
-    const { existsOrError, greaterOrEqualThanOrError } = app.assertions
+    const { existsOrError, notExistsOrError, greaterOrEqualThanOrError } = app.assertions
 
     const save = async (req, res) => {
         const questionario = { ...req.body }
@@ -171,21 +171,71 @@ module.exports = app => {
     }
 
     const getAlunoByQuestionarioIdAndAlunoMatricula = async (req, res) => {
-        try {
-            const { id = '', matricula = '' } = req.params
+        const { id = '', matricula = '' } = req.params
 
+        try {
             const aluno = await app.db({ q: 'questionarios' })
                 .innerJoin({ a: 'alunos' }, 'q.turmaId', 'a.turmaId')
                 .select('a.id', 'a.turmaId', 'a.matricula', 'a.nome')
                 .where({ 'q.id': id })
                 .andWhere({ 'a.matricula': matricula })
                 .first()
-            existsOrError(aluno, 'Aluno não associado a esse questionário')
+
+            const questionarioRealizado = await app.db({ qr: 'questionarios_realizados' })
+                .innerJoin({ a: 'alunos' }, 'qr.alunoId', 'a.id')
+                .select('qr.*')
+                .where({ 'qr.questionarioId': id })
+                .andWhere({ 'a.matricula': matricula })
+                .first()
+
+            try {
+                existsOrError(aluno, 'Aluno não associado a esse questionário')
+                notExistsOrError(questionarioRealizado, 'Aluno já finalizou esse questionário')
+            } catch (err) {
+                return res.status(400).send(err)
+            }
 
             res.json(aluno)
         } catch (err) {
             res.status(500).send(err)
         }
+    }
+
+    const saveQuestionarioRealizado = async (req, res) => {
+        const questionarioId = req.params.id
+        const questionarioRealizado = { ...req.body }
+
+        try {
+            existsOrError(questionarioId, 'Código do questionário não informado')
+            existsOrError(questionarioRealizado.alunoId, 'Aluno não informado')
+            existsOrError(questionarioRealizado.data, 'Data não informada')
+            existsOrError(questionarioRealizado.respostas, 'Respostas não informada')
+        } catch (err) {
+            return res.status(400).send(err)
+        }
+
+        try {
+            await insertQuestionarioRealizado(questionarioRealizado)
+            res.status(204).send()
+        } catch (err) {
+            res.status(500).send(err)
+        }
+    }
+
+    const insertQuestionarioRealizado = async (questionarioRealizado) => {
+        const { respostas } = questionarioRealizado
+        delete questionarioRealizado.id
+        delete questionarioRealizado.respostas
+
+        const id = await app.db('questionarios_realizados').insert(questionarioRealizado).returning('id')
+        await saveQuestionarioRealizadoRepostas(id[0], respostas)
+    }
+
+    const saveQuestionarioRealizadoRepostas = async (questionarioRealizadoId, respostas) => {
+        respostas = respostas.map(r => ({ ...r, questionarioRealizadoId }))
+
+        await app.db('questionarios_realizados_respostas').where({ questionarioRealizadoId }).del()
+        await app.db('questionarios_realizados_respostas').insert(respostas)
     }
 
     return {
@@ -194,6 +244,7 @@ module.exports = app => {
         get,
         getById,
         getQuestoesByQuestionarioId,
-        getAlunoByQuestionarioIdAndAlunoMatricula
+        getAlunoByQuestionarioIdAndAlunoMatricula,
+        saveQuestionarioRealizado
     }
 }

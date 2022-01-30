@@ -3,14 +3,12 @@
     <nav class="navbar topnavbar">
       <div class="navbar-header">
         <a class="navbar-brand" href="#/">
-          <!-- <div class="brand-logo">
-            <img class="img-fluid" src="@/assets/img/logo.png" alt="App Logo" width="36">
+          <div class="brand-logo">
+            <img class="img-fluid" src="@/assets/img/logo-name-ex.png" alt="App Logo" width="160">
           </div>
           <div class="brand-logo-collapsed">
-            <img class="img-fluid" src="@/assets/img/logo.png" alt="App Logo" width="36">
-          </div> -->
-          <div class="brand-logo"><h3>KL</h3></div>
-          <div class="brand-logo-collapsed"><h3>KL</h3></div>
+            <img class="img-fluid" src="@/assets/img/logo-abbr.png" alt="App Logo" width="42">
+          </div>
         </a>
       </div>
       <slot></slot>

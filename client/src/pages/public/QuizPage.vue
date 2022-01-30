@@ -2,7 +2,7 @@
   <div class="quiz-content">
     <div class="quiz-authorization" v-if="!autorizado">
       <Logo />
-      <div class="quiz-authorization__title">Mátrícula</div>
+      <div class="quiz-authorization__title">Matrícula</div>
       <div>
         <b-form-input
           type="text"
@@ -22,6 +22,10 @@
           :disabled="!aluno.matricula"
         >
           Confirmar
+          <template v-if="loading">
+            <b-spinner small type="grow" class="ml-1"></b-spinner>
+            <span class="sr-only ml-1">Carregando...</span>
+          </template>
         </b-button>
       </div>
     </div>
@@ -101,6 +105,10 @@
           @click="finalize"
         >
           Finalizar {{ pagelabel }}
+          <template v-if="loading">
+            <b-spinner small type="grow" class="ml-1"></b-spinner>
+            <span class="sr-only ml-1">Finalizando...</span>
+          </template>
         </b-button>
         <b-button
           pill
@@ -124,10 +132,12 @@ import api from '@/services/api';
 import VuePage from '@/models/vuePage';
 import Aluno from '@/models/aluno';
 import Questao from '@/models/questao';
+import QuestionarioRealizado from '@/models/questionarioRealizado';
 
 @Component
 export default class QuizPage extends VuePage {
 
+  loading = false;
   autorizado = false;
 
   questionarioId = '';
@@ -157,16 +167,21 @@ export default class QuizPage extends VuePage {
   }
 
   async loadAluno(): Promise<void> {
-    if (this.questionarioId && this.aluno?.matricula)
-    try {
-      const res = await api.get(`/questionarios/${this.questionarioId}/alunos/${this.aluno.matricula}`);
-      if (res && res.data) {
-        this.aluno = new Aluno(res.data);
-        this.autorizado = true;
+    if (this.questionarioId && this.aluno?.matricula) {
+      this.loading = true;
+
+      try {
+        const res = await api.get(`/questionarios/${this.questionarioId}/alunos/${this.aluno.matricula}`);
+        if (res && res.data) {
+          this.aluno = new Aluno(res.data);
+          this.autorizado = true;
+        }
+      } catch (err) {
+        this.autorizado = false;
+        this.showError(err);
+      } finally {
+        this.loading = false;
       }
-    } catch (err) {
-      this.autorizado = false;
-      this.showError(err);
     }
   }
 
@@ -194,10 +209,27 @@ export default class QuizPage extends VuePage {
       this.currentPage = nextPage;
   }
 
-  finalize(): void {
+  async finalize(): Promise<void> {
+    const questionarioRealizado = new QuestionarioRealizado({
+      questionarioId: this.questionarioId,
+      alunoId: this.aluno.id,
+      respostas: this.questoes.map(q => ({ questaoId: q.id, acertou: q.acertou }))
+    });
+
+    this.loading = true;
+    try {
+      await api.post(`/questionarios/${this.questionarioId}/realizados`, { ...questionarioRealizado });
+      this.showResults();
+    } catch (err) {
+      this.showError(err);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  showResults(): void {
     const total = this.questoes.length;
     const certas = this.questoes.filter(q => q.acertou).length;
-
     this.$router.replace(`${this.questionarioId}/resultado?total=${total}&certas=${certas}`);
   }
 
@@ -212,6 +244,7 @@ export default class QuizPage extends VuePage {
 @import '~quill/dist/quill.core.css';
 
 .quiz-content {
+
   .quiz-authorization {
     display: flex;
     flex-direction: column;

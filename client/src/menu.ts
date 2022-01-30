@@ -54,7 +54,7 @@ const Menu: ISidebarMenu = [
             {
                 name: 'Questionários',
                 path: 'questionarios/localizar'
-            },
+            }
         ]
     },
 ];
