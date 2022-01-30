@@ -116,7 +116,7 @@ module.exports = app => {
         }
     }
 
-    const getQuestionsByQuestionnaireId = async (req, res) => {
+    const getQuestoesByQuestionarioId = async (req, res) => {
         try {
             const questionarioId = req.params.id
             existsOrError(questionarioId, 'Código do questionário não informado')
@@ -170,5 +170,30 @@ module.exports = app => {
         }
     }
 
-    return { save, remove, get, getById, getQuestionsByQuestionnaireId }
+    const getAlunoByQuestionarioIdAndAlunoMatricula = async (req, res) => {
+        try {
+            const { id = '', matricula = '' } = req.params
+
+            const aluno = await app.db({ q: 'questionarios' })
+                .innerJoin({ a: 'alunos' }, 'q.turmaId', 'a.turmaId')
+                .select('a.id', 'a.turmaId', 'a.matricula', 'a.nome')
+                .where({ 'q.id': id })
+                .andWhere({ 'a.matricula': matricula })
+                .first()
+            existsOrError(aluno, 'Aluno não associado a esse questionário')
+
+            res.json(aluno)
+        } catch (err) {
+            res.status(500).send(err)
+        }
+    }
+
+    return {
+        save,
+        remove,
+        get,
+        getById,
+        getQuestoesByQuestionarioId,
+        getAlunoByQuestionarioIdAndAlunoMatricula
+    }
 }
