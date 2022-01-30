@@ -80,6 +80,10 @@ export default class Questao {
         return respostasSelecionadas.length > 0;
     }
 
+    public haRecurso(): boolean {
+        return !!this.texto || this.haImagem() || this.haVideo();
+    }
+
     public haImagem(): boolean {
         return (this.tipo === 'Vocabulário' && !!this.arquivo?.url);
     }

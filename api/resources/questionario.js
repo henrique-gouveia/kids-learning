@@ -144,7 +144,7 @@ module.exports = app => {
                 let arquivo = null
                 if (q.arquivoId) {
                     arquivo = {
-                        arquivoId: q.arquivoId,
+                        id: q.arquivoId,
                         nomeOriginal: q.arquivoNomeOriginal,
                         nome: q.arquivoNome,
                         tipo: q.arquivoTipo,

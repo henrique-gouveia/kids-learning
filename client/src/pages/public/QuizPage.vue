@@ -29,8 +29,10 @@
       <div class="quiz-question__title text-center">
         {{ questao.enunciado }}
       </div>
-      <div class="quiz-question__complement">
+      <div class="quiz-question__resource" v-if="questao.haRecurso()">
         <img
+          id="quiz-question-audio"
+          :key="questao.arquivo.id"
           class="img-fluid mt-2"
           alt="Imagem"
           width="120"
@@ -38,8 +40,10 @@
           :src="questao.arquivo.url"
         />
         <audio
-          controls
+          id="quiz-question-audio"
+          :key="questao.arquivo.id"
           class="mt-2"
+          controls
           v-if="questao.haVideo()"
         >
           <source :src="questao.arquivo.url" :type="questao.arquivo.tipo">
@@ -240,7 +244,7 @@ export default class QuizPage extends VuePage {
       font-weight: 700;
     }
 
-    .quiz-question__complement {
+    .quiz-question__resource {
       background-color: #6c5fb4;
       padding: 15px;
       border-radius: 12px;
