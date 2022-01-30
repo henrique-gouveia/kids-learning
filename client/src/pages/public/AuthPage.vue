@@ -1,7 +1,7 @@
 <template>
   <div class="auth-content">
     <div class="auth-modal">
-      <img src="@/assets/img/logo.png" alt="logo" width="50"/>
+      <Logo />
       <hr />
       <div class="auth-title">{{ showSignup ? 'Cadastro' : 'Login' }}</div>
 
@@ -79,14 +79,14 @@ export default class AuthPage extends VuePage {
 
 <style lang="scss">
 .auth-content {
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 
   .auth-modal {
     background-color: #fff;
-    width: 350px;
+    width: 330px;
     padding: 35px;
     box-shadow: 0 1px rgba(0, 0, 0, 0.15);
 

@@ -3,6 +3,7 @@ import Vue from 'vue';
 import './config/vendor';
 import './config/filters'
 import './config/bootstrap';
+import './config/components'
 import './config/vue-editor';
 import './config/vue-file-agent';
 import './config/vue-toasted';

@@ -1,6 +1,7 @@
 <template>
   <div class="quiz-content">
     <div class="quiz-authorization" v-if="!autorizado">
+      <Logo />
       <div class="quiz-authorization__title">Mátrícula</div>
       <div>
         <b-form-input

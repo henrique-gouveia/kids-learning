@@ -1,6 +1,7 @@
 <template>
   <b-container>
     <div class="quiz-results__title text-center m-3">
+      <Logo width="150" />
       <h1>Resultado:</h1>
     </div>
     <SimpleCard
