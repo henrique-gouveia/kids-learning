@@ -15,8 +15,10 @@ export default class App extends Vue {
   @Mutation setAuthData: any;
   @Mutation setValidatingToken : any;
 
-  created(): void {
-    this.validateToken();
+  mounted(): void {
+    if (!window.location.pathname.startsWith('/quiz')) {
+      this.validateToken();
+    }
   }
 
   async validateToken(): Promise<void> {
