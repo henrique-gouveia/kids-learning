@@ -48,7 +48,7 @@
 			</b-row>
 			<b-row>
 				<b-col xs="12">
-					<b-button variant="primary" @click="find">
+					<b-button variant="primary" @click="loadQuestionarios">
 						Buscar
 					</b-button>
 					<b-button class="ml-2" @click="reset">
@@ -140,7 +140,13 @@ export default class QuestionarioSearchPage extends VuePage {
   async loadQuestionarios(): Promise<void> {
     this.loading = true;
     try {
-      const res = await api.get(`/questionarios?page=${this.page}`);
+      const { turmaId, dataInicio, dataFim } = this.questionario.toObject();
+
+      let filter = '';
+      turmaId && (filter = `${filter}&turmaId=${turmaId}`);
+      dataInicio && dataFim && (filter = `${filter}&dataInicio=${dataInicio}&dataFim=${dataFim}`);
+
+      const res = await api.get(`/questionarios?page=${this.page}${filter}`);
       if (res && res.data) {
         const { data, count, limit } = res.data;
 
@@ -168,7 +174,7 @@ export default class QuestionarioSearchPage extends VuePage {
     }
   }
 
-	public reset(): void {
+	reset(): void {
     this.page = 1;
     this.questionario = new Questionario();
     this.loadQuestionarios();

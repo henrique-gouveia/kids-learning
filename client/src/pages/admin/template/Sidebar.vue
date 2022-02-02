@@ -8,7 +8,7 @@
               <li class="nav-heading" v-if="item.heading" :key="item.name">
                 <span>{{ item.heading }}</span>
               </li>
-              <router-link tag="li" :to="item.path" active-class="active" v-if="!item.heading && !item.submenu" :key="item.name">
+              <router-link tag="li" active-class="active"  :to="item.path" replace v-if="!item.heading && !item.submenu" :key="item.name">
                 <a :title="item.name">
                   <span v-if="item.label" :class="'float-right badge badge-'+item.label.color">{{item.label.value}}</span>
                   <em :class="item.icon"></em>
@@ -25,7 +25,7 @@
                   <li class="sidebar-subnav-header">{{item.name}}</li>
                   <template v-for="sitem in item.submenu">
                     <template v-if="!sitem.requiresAdmin || sitem.requiresAdmin && userAdmin">
-                      <router-link tag="li" :to="sitem.path" active-class="active" :key="sitem.name">
+                      <router-link tag="li" active-class="active" :to="sitem.path" replace :key="sitem.name">
                           <a :title="sitem.name">
                             <span v-if="sitem.label" :class="'float-right badge badge-'+sitem.label.color">{{sitem.label.value}}</span>
                             <span>{{ sitem.name }}</span>

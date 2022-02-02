@@ -1,4 +1,5 @@
 const uuid = require('uuid')
+const queries = require('../queries')
 
 module.exports = app => {
     const { existsOrError, notExistsOrError, greaterOrEqualThanOrError } = app.assertions
@@ -90,17 +91,28 @@ module.exports = app => {
     const limit = 5
 
     const get = async (req, res) => {
-        const page = req.query.page || 1
+        const { page = 1, turmaId, dataInicio, dataFim } = req.query
 
-        const result = await app.db('questionarios').count('id').first()
-        const count = parseInt(result.count)
+        try {
+            let turmaPredicate = turmaId ? app.db.raw('?? = ?', ['t.id', turmaId]) : null
+            let datasPredicate = dataInicio && dataFim ? app.db.raw('?? >= ? and ?? <= ?', ['q.dataInicio', dataInicio, 'q.dataFim', dataFim]) : null
 
-        app.db({ q: 'questionarios', t: 'turmas' })
-            .select('q.id', { turmaId: 't.id' }, { turma: 't.nome' }, 'q.dataInicio', 'q.dataFim', 'q.quantidadeQuestoes')
-            .limit(limit).offset(page * limit - limit)
-            .whereRaw('?? = ??', ['t.id', 'q.turmaId'])
-            .then(questionarios => res.json({ data: questionarios, count, limit }))
-            .catch(err => res.status(500).send(err))
+            const result = await app.db('questionarios').count('id').first()
+            const count = parseInt(result.count)
+
+            const query = app.db({ q: 'questionarios' })
+                .innerJoin({ t: 'turmas' }, 't.id', 'q.turmaId')
+                .select('q.id', { turmaId: 't.id' }, { turma: 't.nome' }, 'q.dataInicio', 'q.dataFim', 'q.quantidadeQuestoes')
+                .limit(limit).offset(page * limit - limit)
+                .whereRaw(turmaPredicate || '')
+                .whereRaw(datasPredicate || '')
+
+            const questionarios = await query;
+
+            res.json({ data: questionarios, count, limit })
+        } catch (err) {
+            res.status(500).send(err)
+        }
     }
 
     const getById = async (req, res) => {
@@ -238,6 +250,24 @@ module.exports = app => {
         await app.db('questionarios_realizados_respostas').insert(respostas)
     }
 
+    const getResultadosQuestionarioRealizadoById = async (req, res) => {
+        try {
+            const questionarioId = req.params.id;
+            try {
+                existsOrError(questionarioId, 'Código do questionário não informado')
+            } catch (err) {
+                return res.status(400).send(err)
+            }
+
+            const resultSet = await app.db.raw(queries.questionarioRealizadoRespostasById, questionarioId)
+            const resultadosQuestionarioRealizado = resultSet.rows;
+
+            res.json(resultadosQuestionarioRealizado)
+        } catch (err) {
+            res.status(500).send(err)
+        }
+    }
+
     return {
         save,
         remove,
@@ -245,6 +275,7 @@ module.exports = app => {
         getById,
         getQuestoesByQuestionarioId,
         getAlunoByQuestionarioIdAndAlunoMatricula,
-        saveQuestionarioRealizado
+        saveQuestionarioRealizado,
+        getResultadosQuestionarioRealizadoById
     }
 }

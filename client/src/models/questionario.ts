@@ -1,9 +1,11 @@
+import moment from 'moment';
+
 export default class Questionario {
     public id!: string;
-    
+
     public turmaId!: number;
     private _turma?: string;
-    
+
     public dataInicio!: Date;
     public dataFim!: Date;
     public quantidadeQuestoes!: number;
@@ -23,5 +25,15 @@ export default class Questionario {
 
     public get turma(): string {
         return this._turma || '';
+    }
+
+    public toObject(): any {
+        return {
+            id: this.id,
+            turmaId: this.turmaId,
+            dataInicio: moment(this.dataInicio).format(),
+            dataFim: moment(this.dataFim).format(),
+            quantidadeQuestoes: this.quantidadeQuestoes
+        }
     }
 }

@@ -66,8 +66,9 @@ module.exports = app => {
         .put(app.resources.questionario.save)
         .delete(app.resources.questionario.remove)
 
-    app.get('/questionarios/:id/questoes', app.resources.questionario.getQuestoesByQuestionarioId)
     app.get('/questionarios/:id/alunos/:matricula', app.resources.questionario.getAlunoByQuestionarioIdAndAlunoMatricula)
+    app.get('/questionarios/:id/questoes', app.resources.questionario.getQuestoesByQuestionarioId)
+    app.get('/questionarios/:id/resultados', app.config.passport.authenticate(), app.resources.questionario.getResultadosQuestionarioRealizadoById)
     app.post('/questionarios/:id/realizados', app.resources.questionario.saveQuestionarioRealizado)
 
     app.route('/arquivos')
