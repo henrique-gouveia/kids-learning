@@ -101,7 +101,7 @@
           variant="green"
           class="btn-quiz"
           v-if="isLastPage"
-          :disabled="!questao.haRespostaSelecionada()"
+          :disabled="!questao.haRespostaSelecionada() || loading"
           @click="finalize"
         >
           Finalizar {{ pagelabel }}
