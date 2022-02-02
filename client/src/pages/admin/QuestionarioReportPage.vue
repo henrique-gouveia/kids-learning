@@ -17,12 +17,12 @@
         </div>
       </b-col>
       <b-col lg="6">
-        <h3 class="mb-3 text-center">Aproveitamento por Habilidade</h3>
+        <h3 class="mb-3 text-center">Aproveitamento por competência</h3>
         <div>
           <RadarChart
             :height="100"
-            :data="acompanhamentoPorHabilidadeRadar.data"
-            :options="acompanhamentoPorHabilidadeRadar.options"
+            :data="acompanhamentoCompetencia.data"
+            :options="acompanhamentoCompetencia.options"
           />
         </div>
       </b-col>
@@ -87,7 +87,7 @@ export default class QuestionarioReportPage extends VuePage {
   questionarioResultado = new QuestionarioRealizadoTurmaResultado();
 
   acompanhamentoGeralPie = Pie;
-  acompanhamentoPorHabilidadeRadar = Radar;
+  acompanhamentoCompetencia = Radar;
 
   fields: unknown[] = [
     { key: 'respondeu', label: '#' },
@@ -132,8 +132,8 @@ export default class QuestionarioReportPage extends VuePage {
       percentualErrosVocabulario
     } = this.questionarioResultado;
 
-    this.acompanhamentoPorHabilidadeRadar.data.datasets[0].data = [percentualAcertosAudicao, percentualAcertosLeitura, percentualAcertosVocabulario ];
-    this.acompanhamentoPorHabilidadeRadar.data.datasets[1].data = [percentualErrosAudicao, percentualErrosLeitura, percentualErrosVocabulario ];
+    this.acompanhamentoCompetencia.data.datasets[0].data = [percentualAcertosAudicao, percentualAcertosLeitura, percentualAcertosVocabulario ];
+    this.acompanhamentoCompetencia.data.datasets[1].data = [percentualErrosAudicao, percentualErrosLeitura, percentualErrosVocabulario ];
   }
 }
 </script>
