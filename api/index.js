@@ -19,6 +19,7 @@ consign()
     .then('./config/routes.js')
     .into(app)
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log('Kids Api is Running...')
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+    console.log(`KidsLearning Api is Running on port ${port}...`)
 })

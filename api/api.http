@@ -1,0 +1,10 @@
+###
+POST http://localhost:3000/signup
+content-type: application/json
+
+{
+    "nome": "admin",
+    "email": "admin@kidslearning.com.br",
+    "password": "Adm@KL123",
+    "confirmPassword": "Adm@KL123"
+}
