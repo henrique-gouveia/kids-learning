@@ -53,5 +53,4 @@ export default class App extends Vue {
 <style lang="scss">
   @import "@/assets/styles/bootstrap.scss";
   @import "@/assets/styles/app.scss";
-  @import "@/assets/styles/themes/theme-c.scss";
 </style>

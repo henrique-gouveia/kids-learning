@@ -12,7 +12,7 @@ $nav-header-wd-toggled:         $aside-wd-collapsed;
 
 $nav-header-wd-toggled-text:    $aside-wd-collapsed-text;
 
-$nav-top-bg:                    $info;
+$nav-top-bg:                    $primary;
 $nav-top-bg-start:              $nav-top-bg;
 $nav-top-bg-end:                $info-light;
 $nav-header-bg:                 transparent;
@@ -34,7 +34,7 @@ $nav-top-item-desktop-active:   $nav-top-item-mobile-active;
     padding: 0;
     min-height: $navbar-height;
     background-color: $nav-top-bg;
-    @include gradient-x($nav-top-bg-start, $nav-top-bg-end); // // dont' allow stacked icons
+    @include gradient-x($nav-top-bg-start, $nav-top-bg-end); // dont' allow stacked icons
 
     @include media-breakpoint-up(md) {
         .navbar-header {

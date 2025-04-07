@@ -30,8 +30,8 @@
         v-model="usuario.confirmPassword"
       />
 
-      <b-button v-if="showSignup" @click="signup">Registrar</b-button>
-      <b-button v-else @click="signin" active>Entrar</b-button>
+      <b-button variant="primary" v-if="showSignup" @click="signup">Registrar</b-button>
+      <b-button variant="primary"  v-else @click="signin" active>Entrar</b-button>
 
       <!-- <a href @click.prevent="showSignup = !showSignup">
         <span v-if="showSignup">Já tem cadastro? Acesse o Login!</span>
@@ -103,7 +103,6 @@ export default class AuthPage extends VuePage {
 
     button {
       align-self: flex-end;
-      background-color: #7266ba;
       color: #fff;
     }
 
